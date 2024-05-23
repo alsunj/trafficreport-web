@@ -4,6 +4,8 @@ import Button from "./button";
 import VehicleForm from "./vehicleForm";
 import ViolationForm from "./ViolationForm";
 import VehicleViolationForm from "./VehicleViolation";
+import AdditionalVehicleForm from "./AdditionalVehiclleForm";
+import EvidenceForm from "./EvidenceForm";
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 
@@ -44,7 +46,7 @@ const CustomMap = () => {
           <Button onClick={handleButtonClick} imageUrl={randomImageUrl} />
         </div>
 
-        {showVehicleForm && <ViolationForm onSubmit={handleVehicleSubmit} />}
+        {showVehicleForm && <EvidenceForm onSubmit={handleVehicleSubmit} />}
       </Map>
     </div>
   );
