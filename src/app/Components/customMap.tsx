@@ -1,11 +1,14 @@
 import React, { useState } from "react";
 import { Map, Marker, AdvancedMarker } from "@vis.gl/react-google-maps";
 import Button from "./button";
-import VehicleForm from "./vehicleForm";
-import ViolationForm from "./ViolationForm";
-import VehicleViolationForm from "./VehicleViolation";
-import AdditionalVehicleForm from "./AdditionalVehiclleForm";
-import EvidenceForm from "./EvidenceForm";
+import VehicleForm from "../Forms/vehicleForm";
+import ViolationForm from "../Forms/violationForm";
+import VehicleViolationForm from "../Forms/vehicleViolation";
+import AdditionalVehicleForm from "../Forms/AdditionalVehicleForm";
+import EvidenceForm from "../Forms/EvidenceForm";
+import mainForm from "../Forms/EvidenceForm";
+import VehicleViolations from "../Forms/vehicleViolations";
+import VehicleList from "../Forms/VehicleList";
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 
@@ -45,9 +48,13 @@ const CustomMap = () => {
         <div style={{ position: "absolute", top: "20px", left: "20px", zIndex: 999 }}>
           <Button onClick={handleButtonClick} imageUrl={randomImageUrl} />
         </div>
-
-        {showVehicleForm && <EvidenceForm onSubmit={handleVehicleSubmit} />}
-      </Map>
+        
+        {showVehicleForm && (
+          <div style={{ position: "absolute", top: "50%", left: "50%", transform: "translate(-50%, -50%)", zIndex: 999 }}>
+            <VehicleViolations />
+          </div>       
+          )}
+        </Map>
     </div>
   );
 };
