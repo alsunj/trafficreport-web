@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Map, Marker, AdvancedMarker, MapMouseEvent } from "@vis.gl/react-google-maps";
 import Button from "./button";
 import VehicleForm from "../Forms/vehicleForm";
@@ -10,7 +10,11 @@ import mainForm from "../Forms/EvidenceForm";
 import VehicleViolations from "../Forms/vehicleViolations";
 import VehicleList from "../Forms/VehicleList";
 import { ViolationContext } from "../store/violationStore";
+import type { IVehicleViolation } from "../types/IViolations";
+import { VehicleViolationService } from "../services/VehicleViolationService";
 import 'bootstrap/dist/css/bootstrap.min.css';
+import { AlertHeading } from "react-bootstrap";
+import { Alert } from "react-bootstrap";
 
 
 export interface IExistingVehicleViolations
@@ -20,14 +24,37 @@ export interface IExistingVehicleViolations
     lng: number;
 }
 
-const [vehicles, setVehicles] = useState<IExistingVehicleViolations[] | null>(null);
 
+const endpoint = "https://alsunjtrafficreport.azurewebsites.net/api/v1/violations/VehicleViolation/GetVehicleViolations";
+const vehicleViolationService = new VehicleViolationService(endpoint);
 
 const CustomMap: React.FC = () => {
-  const [markerLocation, setMarkerLocation] = useState<{
-  lat: number;
-  lng: number;
-}>();
+  const [markerLocation, setMarkerLocation] = useState<{ lat: number; lng: number } | undefined>(undefined);
+  const [existingVehicleViolations, setExistingVehicleViolations] = useState<IExistingVehicleViolations[] | null>(null);
+;
+useEffect(() => {
+  const fetchData = async () => {
+      try {
+
+          const fetchedVehicleViolations: IVehicleViolation[] = await vehicleViolationService.getAll();
+          const transformedVehicleViolations: IExistingVehicleViolations[] = fetchedVehicleViolations.map(vehicleViolation => {
+            const [lat, lng] = vehicleViolation.coordinates.split(';').map(Number);
+            return {
+              id: vehicleViolation.id || '',
+              lat,
+              lng
+            };
+          });
+          if (setExistingVehicleViolations) {
+            setExistingVehicleViolations(transformedVehicleViolations);
+          }
+      } catch (error) {
+          console.error("Error fetching vehicle violations:", error);
+      }
+  };
+
+  fetchData();
+}, [setExistingVehicleViolations]);
 
 
 
@@ -51,6 +78,11 @@ const handleCloseForm = () => {
 const handleSubmitForm = () => {
   // Handle form submission logic here
   setShowVehicleForm(false); // Close the form after submission
+};
+
+const handleMarkerClick1 = (id: string) => {
+  console.log(`Marker with id ${id} clicked`);
+  // Additional logic when a marker is clicked
 };
 
 const handleMarkerClick = () => {
@@ -82,6 +114,14 @@ const handleMarkerClick = () => {
         disableDoubleClickZoom
         onDblclick={handleMapDblClick} 
       >
+       {existingVehicleViolations?.map(violation => (
+        <Marker
+          key={violation.id}
+          position={{ lat: violation.lat, lng: violation.lng }}
+        >
+        </Marker>
+      ))}
+
         <Marker position={markerLocation} onClick={handleMarkerClick} />
         <div
           style={{ position: "absolute", top: "20px", left: "20px", zIndex: 999 }}
