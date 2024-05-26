@@ -6,43 +6,38 @@ import type { IVehicleViolation } from '../types/IViolations';
 import { VehicleViolationService } from '../services/VehicleViolationService';
 
 interface VehicleViolationsByLicenseProps {
-    licensePlate: string;
+    licensePlate: string | undefined;
 }
 
 const VehicleViolationsByLicense: React.FC<VehicleViolationsByLicenseProps> = ({ licensePlate }) => {
-    const endpoint = `https://alsunjtrafficreport.azurewebsites.net/api/v1/violations/VehicleViolation/GetVehicleViolationsByLicensePlate/${licensePlate}`;
-    const vehicleViolationService = new VehicleViolationService(endpoint);
-    const [licenseVehicleViolations, setLicenseVehicleViolations] = useState<IVehicleViolation[] | null>(null);
+    let endpoint = `https://alsunjtrafficreport.azurewebsites.net/api/v1/violations/VehicleViolation/GetVehicleViolationsByLicensePlate/${licensePlate}`;
+    let vehicleViolationService = new VehicleViolationService(endpoint);
+    let [licenseVehicleViolations, setLicenseVehicleViolations] = useState<IVehicleViolation[] | null>(null);
 
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const fetchedVehicleViolations: IVehicleViolation[] = await vehicleViolationService.getAll();
+                let fetchedVehicleViolations = await vehicleViolationService.getAll();
                 setLicenseVehicleViolations(fetchedVehicleViolations);
             } catch (error) {
+                setLicenseVehicleViolations(null);
                 console.error("Error fetching vehicle violations:", error);
             }
         };
 
         fetchData();
-    }, [licensePlate]); // Added licensePlate as a dependency
+    }, [licensePlate]);
 
-    if (licenseVehicleViolations === null) {
-        return <div>Loading...</div>;
-    }
 
     return (
         <div>
-            <h1>Index</h1>
+            <h1>Vehicle violations for {licensePlate?.toUpperCase()}</h1>
             <p>
-                <Link to="/VehicleViolation/create">Create new</Link>
             </p>
+            {licenseVehicleViolations !== null || false ? (
             <Table striped bordered hover>
                 <thead>
                 <tr>
-                    <th>Vehicle ID</th>
-                    <th>Violation ID</th>
-                    <th>Account ID</th>
                     <th>Description</th>
                     <th>Coordinates</th>
                     <th>Location Name</th>
@@ -52,24 +47,25 @@ const VehicleViolationsByLicense: React.FC<VehicleViolationsByLicenseProps> = ({
                 </thead>
                 <tbody>
                 {licenseVehicleViolations.map((vehicleViolation: IVehicleViolation) => (
-                    <tr key={vehicleViolation.id}>
-                        <td>{vehicleViolation.vehicleId}</td>
-                        <td>{vehicleViolation.violationId}</td>
-                        <td>{vehicleViolation.appUserId}</td>
-                        <td>{vehicleViolation.description}</td>
-                        <td>{vehicleViolation.coordinates}</td>
-                        <td>{vehicleViolation.locationName}</td>
-                        <td>{vehicleViolation.createdAt}</td>
-                        <td>
-                            <Link to={`/VehicleViolation/edit/${vehicleViolation.id}`}>Edit</Link> |
-                            <Link to={`/VehicleViolation/delete/${vehicleViolation.id}`}>Delete</Link>
-                        </td>
-                    </tr>
-                ))}
-                </tbody>
+                        <tr key={vehicleViolation.id}>
+                            <td>{vehicleViolation.description}</td>
+                            <td>{vehicleViolation.coordinates}</td>
+                            <td>{vehicleViolation.locationName}</td>
+                            <td>{vehicleViolation.createdAt}</td>
+                            <td>
+                                <Link to={`/VehicleViolation/edit/${vehicleViolation.id}`}>Edit</Link> |
+                                <Link to={`/VehicleViolation/delete/${vehicleViolation.id}`}>Delete</Link>
+                            </td>
+                        </tr>
+                    ))}
+                    </tbody>
             </Table>
+            ) : (
+            <tr>
+            <td colSpan={5}>No violations found for this license plate.</td>
+            </tr>
+            )}
         </div>
     );
 };
-
 export default VehicleViolationsByLicense;
