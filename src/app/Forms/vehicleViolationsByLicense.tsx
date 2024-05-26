@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import type { IVehicleViolation } from '../types/IViolations';
 import { VehicleViolationService } from '../services/VehicleViolationService';
+import '../../../styles.css';
 
 interface VehicleViolationsByLicenseProps {
     licensePlate: string | undefined;
@@ -35,11 +36,10 @@ const VehicleViolationsByLicense: React.FC<VehicleViolationsByLicenseProps> = ({
             <p>
             </p>
             {licenseVehicleViolations !== null || false ? (
-            <Table striped bordered hover>
+                <Table striped bordered hover className="medium-font">
                 <thead>
                 <tr>
-                    <th>Description</th>
-                    <th>Coordinates</th>
+                    <th className="medium-font">Description</th>
                     <th>Location Name</th>
                     <th>Created At</th>
                     <th>Actions</th>
@@ -49,7 +49,6 @@ const VehicleViolationsByLicense: React.FC<VehicleViolationsByLicenseProps> = ({
                 {licenseVehicleViolations.map((vehicleViolation: IVehicleViolation) => (
                         <tr key={vehicleViolation.id}>
                             <td>{vehicleViolation.description}</td>
-                            <td>{vehicleViolation.coordinates}</td>
                             <td>{vehicleViolation.locationName}</td>
                             <td>{vehicleViolation.createdAt}</td>
                             <td>

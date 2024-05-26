@@ -1,16 +1,7 @@
 import type { IVehicle } from "../types/IVehicles";
-export class VehicleService {
-    private endpoint: string;
-  
+import {BaseService} from "@/app/services/BaseService";
+export class VehicleService extends BaseService<IVehicle> {
     constructor(endpoint: string) {
-      this.endpoint = endpoint;
+        super(endpoint);
     }
-
-  async getAll(): Promise<IVehicle[]> {
-    const response = await fetch(this.endpoint);
-    if (!response.ok) {
-        throw new Error('Network response was not ok');
-      }
-      return await response.json();
-  }
 }
