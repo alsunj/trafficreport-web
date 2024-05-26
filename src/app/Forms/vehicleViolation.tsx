@@ -1,40 +1,126 @@
-// VehicleViolationForm.tsx
-import React from "react";
+import React, { useEffect, useContext, useState } from 'react';
 import Form from 'react-bootstrap/Form';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import { ViolationContext } from "../store/violationStore";
+import { VehicleContext } from '../store/vehicleStore';
+import { IViolation } from '../types/IViolations';
+import { ViolationService } from '../services/ViolatonService';
+import type { IVehicleViolation } from '../types/IViolations';
+import type { IVehicle } from '../types/IVehicles';
+import { VehicleViolationService } from '../services/VehicleViolationService';
+import { VehicleService } from '../services/VehicleService';
 
 interface VehicleViolationFormProps {
-  onSubmit: (event: React.FormEvent<HTMLFormElement>) => void;
+  latlng : string;
+  onCancel: () => void;
+  onSubmit: (vehicleViolation: IVehicleViolation) => void;
 }
 
-const VehicleViolationForm: React.FC<VehicleViolationFormProps> = ({ onSubmit }) => {
+const VehicleViolationForm: React.FC<VehicleViolationFormProps> = ({
+  latlng,
+  onCancel,
+  onSubmit
+}) => {
+  const endpoint = "https://alsunjtrafficreport.azurewebsites.net/api/v1/violations/Violation/GetViolations";
+  const vehicleendpoint = "https://alsunjtrafficreport.azurewebsites.net/api/v1/vehicles/Vehicle/GetVehicles"
+  const { violations, setViolations } = useContext(ViolationContext);
+  const { vehicles, setVehicles} = useContext(VehicleContext);
+  const violationService = new ViolationService(endpoint);
+  const vehicleService = new VehicleService(vehicleendpoint)
+  const [selectedViolation, setSelectedViolation] = useState<string>("");
+  const [vehicleLicensePlate, setVehicleLicensePlate] = useState<string>("");
+  const [description, setDescription] = useState<string>("");
+  const [locationName, setLocationName] = useState<string>("");
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const fetchedVehicles: IVehicle[] = await vehicleService.getAll();
+        const fetchedViolations: IViolation[] = await violationService.getAll();
+        if (setViolations) {
+          setViolations(fetchedViolations);
+          console.log("latlng on siin" + latlng);
+        }
+        if (setVehicles)
+          {
+            
+          }
+      } catch (error) {
+        console.error("Error fetching vehicles:", error);
+      }
+    };
+
+    fetchData();
+  }, [setViolations]);
+
+  if (violations === null) {
+    return <div>Loading...</div>;
+  }
+  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+    const endpoint1 = "https://alsunjtrafficreport.azurewebsites.net/api/v1/violations/VehicleViolation/PostVehicleViolation";
+    const vehicleViolationService  = new VehicleViolationService(endpoint1);
+    event.preventDefault(); // Prevent default form submission
+    const vehicleViolation: IVehicleViolation = {
+      vehicleId: vehicleLicensePlate, 
+      violationId: selectedViolation, 
+      appUserId: "232c297d-276f-4e2e-a6ed-20950466e828",
+      description: description,
+      coordinates: latlng,
+      locationName: locationName,
+      createdAt: new Date().toISOString(), 
+    };
+    vehicleViolationService.postViolation(vehicleViolation);
+    console.log('Vehicle Violation:', vehicleViolation);
+  };
+
   return (
-    <Form onSubmit={onSubmit} className="position-absolute top-50 start-50 translate-middle p-4 bg-white rounded shadow" style={{ width: '500px' }}>
+    <Form onSubmit={handleSubmit} className="position-absolute top-50 start-50 translate-middle p-4 bg-white rounded shadow" style={{ width: '500px' }}>
       <h4>Vehicle Violation</h4>
       <hr />
       <Form.Group className="mb-3">
         <Form.Label>Vehicle License Plate</Form.Label>
-        <Form.Control type="text" placeholder="Vehicle License Plate" />
+        <Form.Control 
+          type="text" 
+          placeholder="Vehicle License Plate" 
+          value={vehicleLicensePlate}
+          onChange={(e) => setVehicleLicensePlate(e.target.value)}
+        />
       </Form.Group>
       <Form.Group className="mb-3">
         <Form.Label>Violation</Form.Label>
-        <Form.Control type="text" placeholder="Insert Violation" />
+        <Form.Select 
+          value={selectedViolation} 
+          onChange={(e) => setSelectedViolation(e.target.value)}
+        >
+          <option value="">Select Violation</option>
+          {violations.map((violation) => (
+            <option key={violation.id} value={violation.id}>{violation.violationName}</option>
+          ))}
+        </Form.Select>
       </Form.Group>
       <Form.Group className="mb-3">
         <Form.Label>Description</Form.Label>
-        <Form.Control as="textarea" rows={3} placeholder="Describe the incident" />
+        <Form.Control 
+          as="textarea" 
+          rows={3} 
+          placeholder="Describe the incident" 
+          value={description}
+          onChange={(e) => setDescription(e.target.value)}
+        />
       </Form.Group>
       <Form.Group className="mb-3">
         <Form.Label>Location Name</Form.Label>
-        <Form.Control type="text" placeholder="Enter Location Name" />
+        <Form.Control 
+          type="text" 
+          placeholder="Enter Location Name" 
+          value={locationName}
+          onChange={(e) => setLocationName(e.target.value)}
+        />
       </Form.Group>
       <div className="d-grid">
         <button type="submit" className="btn btn-primary">Submit Violation</button>
+        <button type="button" className="btn btn-secondary" onClick={onCancel}>Cancel</button>
       </div>
     </Form>
-    //need coordinates on placed spot.
-    //appuserid from jwt
   );
 };
-
 export default VehicleViolationForm;

@@ -9,15 +9,13 @@ import { EvidenceContext } from "../store/evidenceStore";
 import { VehicleViolationService } from "../services/VehicleViolationService";
 const VehicleViolations: React.FC = () => {
     const endpoint = "https://alsunjtrafficreport.azurewebsites.net/api/v1/violations/VehicleViolation/GetVehicleViolations";
-
     const { vehicleViolations, setVehicleViolations } = useContext(ViolationContext);
     const vehicleViolationService = new VehicleViolationService(endpoint);
 
     useEffect(() => {
         const fetchData = async () => {
             try {
-                // Fetch vehicle violations data from API or context
-                // Replace this with your actual logic to fetch vehicle violations
+
                 const fetchedVehicleViolations: IVehicleViolation[] = await vehicleViolationService.getAll();
                 if (setVehicleViolations) {
                     setVehicleViolations(fetchedVehicleViolations);
