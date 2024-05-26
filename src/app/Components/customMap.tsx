@@ -13,11 +13,24 @@ import { ViolationContext } from "../store/violationStore";
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 
+export interface IExistingVehicleViolations
+{
+    id: string;
+    lat: number;
+    lng: number;
+}
+
+const [vehicles, setVehicles] = useState<IExistingVehicleViolations[] | null>(null);
+
+
 const CustomMap: React.FC = () => {
   const [markerLocation, setMarkerLocation] = useState<{
   lat: number;
   lng: number;
 }>();
+
+
+
 
 const [showVehicleForm, setShowVehicleForm] = useState(false);
 
@@ -91,6 +104,7 @@ const handleMarkerClick = () => {
               onSubmit={handleSubmitForm} 
             />
           </div>
+          
         )}
       </Map>
     </div>

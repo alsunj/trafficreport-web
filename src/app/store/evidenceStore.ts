@@ -7,7 +7,7 @@ export interface EvidenceContextProps{
     evidences: IEvidence[] | null;
     evidenceTypes: IEvidenceType[] | null;
     comments : IComment[] | null;
-    setComments:(( comments : IComment[])=> void)| null;
+    setComments:(( comments : IComment[])=> void) | null;
     setEvidences:((  evidences: IEvidence[])=> void)| null;
     setEvidenceTypes: ((evidenceTypes: IEvidenceType[]) => void) | null;}
 

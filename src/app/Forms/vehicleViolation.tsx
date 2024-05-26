@@ -42,7 +42,8 @@ const VehicleViolationForm: React.FC<VehicleViolationFormProps> = ({
         }
         if (setVehicles)
           {
-            
+            setVehicles(fetchedVehicles)
+
           }
       } catch (error) {
         console.error("Error fetching vehicles:", error);
@@ -53,8 +54,12 @@ const VehicleViolationForm: React.FC<VehicleViolationFormProps> = ({
   }, [setViolations]);
 
   if (violations === null) {
-    return <div>Loading...</div>;
+    return <div>Loading violations...</div>;
   }
+  if(vehicles == null)
+    {
+      return <div> Loading vehicles...</div>
+    }
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     const endpoint1 = "https://alsunjtrafficreport.azurewebsites.net/api/v1/violations/VehicleViolation/PostVehicleViolation";
     const vehicleViolationService  = new VehicleViolationService(endpoint1);
@@ -78,13 +83,19 @@ const VehicleViolationForm: React.FC<VehicleViolationFormProps> = ({
       <hr />
       <Form.Group className="mb-3">
         <Form.Label>Vehicle License Plate</Form.Label>
-        <Form.Control 
-          type="text" 
-          placeholder="Vehicle License Plate" 
+        <Form.Select
           value={vehicleLicensePlate}
           onChange={(e) => setVehicleLicensePlate(e.target.value)}
-        />
+        >
+        <option value="">Select Violation</option>
+          {vehicles.map((vehicle) => (
+            <option key={vehicle.id} value={vehicle.id}>{vehicle.regNr}</option>
+          ))}
+      </Form.Select>
+
       </Form.Group>
+
+
       <Form.Group className="mb-3">
         <Form.Label>Violation</Form.Label>
         <Form.Select 
@@ -97,6 +108,8 @@ const VehicleViolationForm: React.FC<VehicleViolationFormProps> = ({
           ))}
         </Form.Select>
       </Form.Group>
+
+
       <Form.Group className="mb-3">
         <Form.Label>Description</Form.Label>
         <Form.Control 

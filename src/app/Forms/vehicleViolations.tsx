@@ -8,7 +8,7 @@ import { ViolationContext } from "../store/violationStore";
 import { EvidenceContext } from "../store/evidenceStore";
 import { VehicleViolationService } from "../services/VehicleViolationService";
 const VehicleViolations: React.FC = () => {
-    const endpoint = "https://alsunjtrafficreport.azurewebsites.net/api/v1/violations/VehicleViolation/GetVehicleViolations";
+    const endpoint = "https://alsunjtrafficreport.azurewebsites.net/api/v1/violations/VehicleViolation/Get";
     const { vehicleViolations, setVehicleViolations } = useContext(ViolationContext);
     const vehicleViolationService = new VehicleViolationService(endpoint);
 

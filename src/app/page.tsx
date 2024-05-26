@@ -1,7 +1,6 @@
 "use client";
 import { BrowserRouter } from 'react-router-dom'
 import React from 'react';
-import { APIProvider } from "@vis.gl/react-google-maps";
 import Root from './routes/Root';
 export default function Home() 
 {
