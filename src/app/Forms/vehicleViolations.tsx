@@ -1,16 +1,13 @@
-import React, { useEffect ,useContext} from "react";
+import React, { useEffect , useState} from "react";
 import Table from 'react-bootstrap/Table';
 import { Link } from 'react-router-dom';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import type { IVehicleViolation } from '../types/IViolations';
-import { VehicleContext } from "../store/vehicleStore";
-import { ViolationContext } from "../store/violationStore";
-import { EvidenceContext } from "../store/evidenceStore";
 import { VehicleViolationService } from "../services/VehicleViolationService";
 const VehicleViolations: React.FC = () => {
     const endpoint = "https://alsunjtrafficreport.azurewebsites.net/api/v1/violations/VehicleViolation/GetVehicleViolations";
 
-    const { vehicleViolations, setVehicleViolations } = useContext(ViolationContext);
+    const [ vehicleViolations, setVehicleViolations ] = useState<IVehicleViolation[] | null>(null);
     const vehicleViolationService = new VehicleViolationService(endpoint);
 
     useEffect(() => {

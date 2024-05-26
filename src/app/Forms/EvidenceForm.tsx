@@ -16,24 +16,16 @@ const EvidenceForm: React.FC<EvidenceFormProps> = ({ onSubmit }) => {
         <Form.Select>
         <option>Enter Evidence Type Name</option>
         </Form.Select>
-
-      </Form.Group>
-      <Form.Group className="mb-3">
-        <Form.Label>Registration Number</Form.Label>
-        <Form.Control type="text" placeholder="Enter Registration Number" />
-      </Form.Group>
-      <Form.Group className="mb-3">
-        <Form.Label>Location</Form.Label>
-        <Form.Control type="text" placeholder="Enter Location" />
       </Form.Group>
       <Form.Group className="mb-3">
         <Form.Label>Description</Form.Label>
         <Form.Control as="textarea" rows={3} placeholder="Enter Description" />
       </Form.Group>
-      <Form.Group className="mb-3">
-        <Form.Label>Created At</Form.Label>
-        <Form.Control type="datetime-local" placeholder="Enter Date and Time" />
+      <Form.Group controlId="formFile" className="mb-3">
+        <Form.Label>Default file input example</Form.Label>
+        <Form.Control type="file" />
       </Form.Group>
+
       <div className="d-grid">
         <button type="submit" className="btn btn-primary">Submit Evidence</button>
       </div>

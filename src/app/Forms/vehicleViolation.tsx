@@ -1,8 +1,6 @@
 import React, { useEffect, useContext, useState } from 'react';
 import Form from 'react-bootstrap/Form';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import { ViolationContext } from "../store/violationStore";
-import { VehicleContext } from '../store/vehicleStore';
 import { IViolation } from '../types/IViolations';
 import { ViolationService } from '../services/ViolatonService';
 import type { IVehicleViolation } from '../types/IViolations';
@@ -23,8 +21,8 @@ const VehicleViolationForm: React.FC<VehicleViolationFormProps> = ({
 }) => {
   const endpoint = "https://alsunjtrafficreport.azurewebsites.net/api/v1/violations/Violation/GetViolations";
   const vehicleendpoint = "https://alsunjtrafficreport.azurewebsites.net/api/v1/vehicles/Vehicle/GetVehicles"
-  const { violations, setViolations } = useContext(ViolationContext);
-  const { vehicles, setVehicles} = useContext(VehicleContext);
+  const [ violations, setViolations ] = useState<IViolation[] | null>(null);
+  const [ vehicles, setVehicles] = useState<IVehicle[] | null>(null);
   const violationService = new ViolationService(endpoint);
   const vehicleService = new VehicleService(vehicleendpoint)
   const [selectedViolation, setSelectedViolation] = useState<string>("");

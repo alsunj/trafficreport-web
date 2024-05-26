@@ -9,13 +9,12 @@ import EvidenceForm from "../Forms/EvidenceForm";
 import mainForm from "../Forms/EvidenceForm";
 import VehicleViolations from "../Forms/vehicleViolations";
 import VehicleList from "../Forms/VehicleList";
-import { ViolationContext } from "../store/violationStore";
 import type { IVehicleViolation } from "../types/IViolations";
 import { VehicleViolationService } from "../services/VehicleViolationService";
+import CommentForm from "../Forms/CommentForm";
 import VehicleViolationsById from "../Forms/vehicleViolationbyID";
 import 'bootstrap/dist/css/bootstrap.min.css';
-import { AlertHeading } from "react-bootstrap";
-import { Alert } from "react-bootstrap";
+
 import Sidebar from "@/app/Components/sidebar";
 
 
@@ -155,6 +154,20 @@ const handleMarkerClick = () => {
           </div>
           
         )}
+        { showVehicleForm && (
+          <div
+          style={{
+            position: "absolute",
+            top: "50%",
+            left: "50%",
+            transform: "translate(-50%, -50%)",
+            zIndex: 999,
+          }}
+        >
+         
+        <VehicleList />
+        </div>
+      )}
          {selectedViolationId && (
           <div
           style={{

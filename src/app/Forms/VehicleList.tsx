@@ -1,15 +1,14 @@
-import React, { useEffect,useContext } from 'react';
+import React, { useEffect,  useState } from 'react';
 import Table from 'react-bootstrap/Table';
 import { Link } from 'react-router-dom';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import { VehicleContext } from '../store/vehicleStore';
 import type { IVehicle } from '../types/IVehicles';
 import { VehicleService } from '../services/VehicleService';
 
 
 const VehicleList: React.FC = () => {
     const endpoint = "https://alsunjtrafficreport.azurewebsites.net/api/v1/vehicles/Vehicle/GetVehicles";
-    const { vehicles, setVehicles } = useContext(VehicleContext);
+    const [ vehicles, setVehicles] = useState<IVehicle[] | null>(null);
     const vehicleService = new VehicleService(endpoint);
   
     useEffect(() => {
