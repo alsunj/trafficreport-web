@@ -13,5 +13,6 @@ export interface IVehicleViolation{
     description: string;
     coordinates: string;
     locationName: string;
-    createdAt: string; 
+    createdAt: string;
+
 }

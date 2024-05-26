@@ -34,6 +34,7 @@ const Root = () => {
     const [violations, setViolations] = useState<IViolation[] | null>(null);
     const [eViolationTypes, setEViolationTypes] = useState<string[] | null>(null);
     const [vehicleViolations, setVehicleViolations] = useState<IVehicleViolation[] | null>(null);
+    const [vehicleViolation, setVehicleViolation] = useState<IVehicleViolation | null>(null);
     const [evidences, setEvidences] = useState<IEvidence[] | null>(null);
     const [evidenceTypes, setEvidenceTypes] = useState<IEvidenceType[] | null>(null);
     const [comments, setComments] = useState<IComment[] | null>(null);

@@ -3,6 +3,7 @@ import Button from 'react-bootstrap/Button';
 import Offcanvas from 'react-bootstrap/Offcanvas';
 import VehicleViolationsByLicense from '@/app/Forms/vehicleViolationsByLicense';
 import '../../../styles.css';
+import FieldSubmit from "@/app/Components/fieldSubmit";
 
 const Sidebar: React.FC = () => {
     const [show, setShow] = useState(false);
@@ -28,7 +29,11 @@ const Sidebar: React.FC = () => {
                     <Offcanvas.Title>Main menu</Offcanvas.Title>
                 </Offcanvas.Header>
                 <Offcanvas.Body>
-
+                    <FieldSubmit
+                        licensePlate={licensePlate}
+                        setLicensePlate={setLicensePlate}
+                        onSubmit={handleSubmit}
+                    />
                     {submittedPlate && (
                         <VehicleViolationsByLicense licensePlate={submittedPlate} />
                     )}
