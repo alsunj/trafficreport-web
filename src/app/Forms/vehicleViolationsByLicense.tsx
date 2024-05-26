@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import type { IVehicleViolation } from '../types/IViolations';
 import { VehicleViolationService } from '../services/VehicleViolationService';
+import '../../../styles.css';
 
 interface VehicleViolationsByLicenseProps {
     licensePlate: string | undefined;
@@ -31,15 +32,16 @@ const VehicleViolationsByLicense: React.FC<VehicleViolationsByLicenseProps> = ({
 
     return (
         <div>
-            <h1>Vehicle violations for {licensePlate?.toUpperCase()}</h1>
+            <p></p>
+            <p></p>
+            <h2>Vehicle violations for {licensePlate?.toUpperCase()}</h2>
             <p>
             </p>
             {licenseVehicleViolations !== null || false ? (
-            <Table striped bordered hover>
-                <thead>
+            <Table striped bordered hover className="medium-font">
+                <thead >
                 <tr>
-                    <th>Description</th>
-                    <th>Coordinates</th>
+                    <th className="medium-font">Description</th>
                     <th>Location Name</th>
                     <th>Created At</th>
                     <th>Actions</th>
@@ -49,10 +51,10 @@ const VehicleViolationsByLicense: React.FC<VehicleViolationsByLicenseProps> = ({
                 {licenseVehicleViolations.map((vehicleViolation: IVehicleViolation) => (
                         <tr key={vehicleViolation.id}>
                             <td>{vehicleViolation.description}</td>
-                            <td>{vehicleViolation.coordinates}</td>
                             <td>{vehicleViolation.locationName}</td>
                             <td>{vehicleViolation.createdAt}</td>
                             <td>
+                                <Link to={`/VehicleViolation/edit/${vehicleViolation.id}`}>Info</Link> |
                                 <Link to={`/VehicleViolation/edit/${vehicleViolation.id}`}>Edit</Link> |
                                 <Link to={`/VehicleViolation/delete/${vehicleViolation.id}`}>Delete</Link>
                             </td>

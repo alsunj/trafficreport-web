@@ -3,6 +3,7 @@ import Button from 'react-bootstrap/Button';
 import Offcanvas from 'react-bootstrap/Offcanvas';
 import FieldSubmit from '@/app/Components/fieldSubmit';
 import VehicleViolationsByLicense from '@/app/Forms/vehicleViolationsByLicense';
+import '../../../styles.css';
 
 const Sidebar: React.FC = () => {
     const [show, setShow] = useState(false);
@@ -23,7 +24,7 @@ const Sidebar: React.FC = () => {
                 Launch
             </Button>
 
-            <Offcanvas show={show} onHide={handleClose}>
+            <Offcanvas className="custom-offcanvas" show={show} onHide={handleClose}>
                 <Offcanvas.Header closeButton>
                     <Offcanvas.Title>Main menu</Offcanvas.Title>
                 </Offcanvas.Header>
