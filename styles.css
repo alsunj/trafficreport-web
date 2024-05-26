@@ -1,0 +1,15 @@
+.small-font {
+    font-size: 12px;
+}
+
+.medium-font {
+    font-size: 14px;
+}
+
+.large-font {
+    font-size: 20px;
+}
+
+.custom-offcanvas {
+    width: 20% !important;
+}
