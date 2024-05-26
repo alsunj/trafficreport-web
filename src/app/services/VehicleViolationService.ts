@@ -13,6 +13,14 @@ export class VehicleViolationService {
       }
       return await response.json();
     }
+    async getById(id: string): Promise<IVehicleViolation> {
+        const url = `${this.endpoint}/${id}`;
+        const response = await fetch(url);
+        if (!response.ok) {
+            throw new Error('Failed to fetch vehicle violation');
+        }
+        return await response.json();
+    }
     async postViolation(violationData: IVehicleViolation): Promise<void> {
         try {
           const response = await fetch(this.endpoint, {
@@ -30,8 +38,6 @@ export class VehicleViolationService {
           throw new Error(`Error posting violation data: `);
         }
       }
-
-    //async urlModifyer(string: )
   }
   
   
