@@ -77,12 +77,12 @@ const handleCloseForm = () => {
 };
 
 const handleSubmitForm = () => {
-  // Handle form submission logic here
+  // Handle form submission logi  here
   setShowVehicleForm(false); // Close the form after submission
 };
 
-const handleMarkerClick1 = (id: string) => {
-  console.log(`Marker with id ${id} clicked`);
+const handleExistingMarkerClick = (id: string) => () => {
+  alert(`Marker with id ${id} clicked`);
   // Additional logic when a marker is clicked
 };
 
@@ -102,6 +102,7 @@ const handleMarkerClick = () => {
     alert("Marker location is not set.");
   }
 };
+  const crashicon= "https://cdn-icons-png.flaticon.com/512/1576/1576488.png"
 
   const randomImageUrl =
     "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRb9UGESK6l_GZCNxF1Ul5G8pg6mgJIHXhYflYKMTg7Mw&s";
@@ -114,14 +115,18 @@ const handleMarkerClick = () => {
         defaultCenter={{ lat: 59.39552664613792, lng: 24.671705895803086 }}
         disableDefaultUI
         disableDoubleClickZoom
-        onDblclick={handleMapDblClick} 
+        onDblclick={handleMapDblClick}
+        mapId={"5588886"}
+
       >
        {existingVehicleViolations?.map(violation => (
-        <Marker
+        <AdvancedMarker
           key={violation.id}
           position={{ lat: violation.lat, lng: violation.lng }}
-        >
-        </Marker>
+          onClick={handleExistingMarkerClick(violation.id)} // Properly bind the handler
+          >
+           <img src= {crashicon} width={50} height={50} />
+        </AdvancedMarker>
       ))}
 
         <Marker position={markerLocation} onClick={handleMarkerClick} />
