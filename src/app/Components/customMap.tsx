@@ -12,6 +12,7 @@ import VehicleList from "../Forms/VehicleList";
 import { ViolationContext } from "../store/violationStore";
 import type { IVehicleViolation } from "../types/IViolations";
 import { VehicleViolationService } from "../services/VehicleViolationService";
+import VehicleViolationsById from "../Forms/vehicleViolationbyID";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { AlertHeading } from "react-bootstrap";
 import { Alert } from "react-bootstrap";
@@ -63,6 +64,8 @@ useEffect(() => {
 const [showVehicleForm, setShowVehicleForm] = useState(false);
 
 const [showVehicleCreateForm,setVehicleViolationCreateForm] = useState(false);
+const [selectedViolationId, setSelectedViolationId] = useState<string | null>(null);
+
 
 const handleButtonClick = () => {
   setShowVehicleForm(true);
@@ -83,9 +86,8 @@ const handleSubmitForm = () => {
 
 const handleExistingMarkerClick = (id: string) => () => {
   alert(`Marker with id ${id} clicked`);
-  // Additional logic when a marker is clicked
+  setSelectedViolationId(id);
 };
-
 const handleMarkerClick = () => {
   if (markerLocation) { // Check if markerLocation is defined
     const confirmation = window.confirm("Would you like to create a vehicle violation on set marker?");
@@ -123,7 +125,7 @@ const handleMarkerClick = () => {
         <AdvancedMarker
           key={violation.id}
           position={{ lat: violation.lat, lng: violation.lng }}
-          onClick={handleExistingMarkerClick(violation.id)} // Properly bind the handler
+          onClick={handleExistingMarkerClick(violation.id)}
           >
            <img src= {crashicon} width={50} height={50} />
         </AdvancedMarker>
@@ -153,6 +155,9 @@ const handleMarkerClick = () => {
           </div>
           
         )}
+         {selectedViolationId && (
+        <VehicleViolationsById id={selectedViolationId} />
+      )}
       </Map>
     </div>
   );
