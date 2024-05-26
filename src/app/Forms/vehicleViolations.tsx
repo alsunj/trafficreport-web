@@ -11,7 +11,7 @@ const VehicleViolations: React.FC = () => {
     const endpoint = "https://alsunjtrafficreport.azurewebsites.net/api/v1/violations/VehicleViolation/GetVehicleViolations";
     const { vehicleViolations, setVehicleViolations } = useContext(ViolationContext);
     const vehicleViolationService = new VehicleViolationService(endpoint);
-    
+
     useEffect(() => {
         const fetchData = async () => {
             try {

@@ -15,6 +15,7 @@ import { VehicleViolationService } from "../services/VehicleViolationService";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { AlertHeading } from "react-bootstrap";
 import { Alert } from "react-bootstrap";
+import Sidebar from "@/app/Components/sidebar";
 
 
 export interface IExistingVehicleViolations
@@ -107,6 +108,7 @@ const handleMarkerClick = () => {
 
   return (
     <div style={{ height: "98vh", position: "relative" }}>
+        <Sidebar></Sidebar>
       <Map
         defaultZoom={14}
         defaultCenter={{ lat: 59.39552664613792, lng: 24.671705895803086 }}
