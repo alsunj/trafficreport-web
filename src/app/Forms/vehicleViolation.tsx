@@ -71,7 +71,7 @@ const VehicleViolationForm: React.FC<VehicleViolationFormProps> = ({
       locationName: locationName,
       createdAt: new Date().toISOString(), 
     };
-    vehicleViolationService.postViolation(vehicleViolation);
+    vehicleViolationService.post(vehicleViolation);
     console.log('Vehicle Violation:', vehicleViolation);
   };
 
