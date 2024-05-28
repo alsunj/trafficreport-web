@@ -26,7 +26,7 @@ export interface IExistingVehicleViolations
 }
 
 
-const endpoint = "https://alsunjtrafficreport.azurewebsites.net/api/v1/violations/VehicleViolation/GetVehicleViolations";
+const endpoint = "VehicleViolation/GetVehicleViolations";
 const vehicleViolationService = new VehicleViolationService(endpoint);
 
 const CustomMap: React.FC = () => {
@@ -37,7 +37,7 @@ useEffect(() => {
   const fetchData = async () => {
       try {
 
-          const fetchedVehicleViolations: IVehicleViolation[] = await vehicleViolationService.getAll();
+          const fetchedVehicleViolations = await vehicleViolationService.getAll();
           const transformedVehicleViolations: IExistingVehicleViolations[] = fetchedVehicleViolations.map(vehicleViolation => {
             const [lat, lng] = vehicleViolation.coordinates.split(';').map(Number);
             return {
@@ -165,7 +165,8 @@ const handleMarkerClick = () => {
           }}
         >
          
-        <VehicleList />
+        <VehicleForm onSubmit={handleSubmitForm} 
+        />
         </div>
       )}
          {selectedViolationId && (

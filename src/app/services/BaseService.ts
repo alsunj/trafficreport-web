@@ -1,43 +1,109 @@
-import type { TEntity } from "../types/TEntity";
-export class BaseService<TEntity>{
-    private endpoint: string;
+import { BaseServiceHost } from "@/BaseServiceHost";
+import type { AxiosError } from "axios";
+import type { IResultObject } from "../types/IResultObject";
 
-    constructor(endpoint: string) {
-        this.endpoint = endpoint;
-    }
 
-    async getById(id: string): Promise<TEntity> {
-        const url = `${this.endpoint}/${id}`;
-        const response = await fetch(url);
-        if (!response.ok) {
-            throw new Error('Failed to fetch vehicle violation');
-        }
-        return await response.json();
+export class BaseService<TEntity> extends BaseServiceHost {
+    constructor(baseUrl: string) {
+        super(baseUrl);
     }
 
     async getAll(): Promise<TEntity[]> {
-        const response = await fetch(this.endpoint);
-        if (!response.ok) {
-            throw new Error('Network response was not ok');
-        }
-        return await response.json();
-    }
-
-    async post(data: TEntity): Promise<void> {
         try {
-            const response = await fetch(this.endpoint, {
-                method: 'POST',
+            const response = await this.axios.get<TEntity[]>('', {
                 headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(data),
+                    Authorization: 'Bearer '
+                }
             });
-
-            if (!response.ok) {
-                throw new Error('Failed to post violation data');
+            if (response.status === 200) {
+                return response.data;
             }
-        } catch (error) {
-            throw new Error(`Error posting violation data: `);
+            return [];
+        } catch (e) {
+            console.log('error: ', (e as Error).message);
+            return [];
         }
     }
-}
+    async get(id: string): Promise<TEntity> {
+        let response = await this.axios.get<TEntity>(`/${id}`);
+        return response.data as TEntity;
+    }
+
+    async add(entity: TEntity): Promise<IResultObject<TEntity>> {
+        try {
+            let response = await this.axios.post('', entity, {
+                headers: {
+                    Authorization: 'Bearer '
+                }
+            });
+            return {
+                data: response.data
+            };
+        } catch (error: any) {
+            return {
+                errors: [JSON.stringify(error)]
+            };
+        }
+    }
+
+        async update(entity: TEntity): Promise<IResultObject<TEntity>> {
+            try {
+                let response = await this.axios.put(``, entity, {
+                    headers: {
+                        Authorization: 'Bearer '
+                    }
+                });
+                return {
+                    data: response.data
+                };
+            } catch (error: any) {
+                return {
+                    errors: [JSON.stringify(error)]
+                };
+            }
+        }
+  /*        async delete(id: string): Promise<void> {
+            try {
+                await this.axios.delete(`/${id}`, {
+                    headers: {
+                        Authorization: 'Bearer '
+                    }
+                });
+            } catch (e) {
+                let response = (e as AxiosError).response!;
+               if (response.status == 401 && this.identityStore.jwt) {
+                    let accountService = new AccountService();
+                    let refreshResponse = await accountService.refreshIdentity();
+                    this.identityStore.jwt = refreshResponse.data?.jwt!;
+    
+                    if (!this.identityStore.$state.jwt) return;
+    
+                    await httpCLient.delete(`/${this.path}/${id}`, {
+                        headers: {
+                            "Authorization": "bearer " + this.identityStore.jwt
+                        }
+                    });
+                }
+            }
+        }
+        */
+        async getAllEnums(): Promise<string[]> {
+            console.log("getAllEnums");
+            try {
+                let response = await this.axios.get(`/`, {
+                    headers: {
+                        Authorization: 'Bearer '
+                    }
+                });
+                console.log(response);
+    
+                return response.data as string[];
+            } catch (e) {
+                let response = (e as AxiosError).response!;
+                
+                }
+                return [];
+            }
+        }
+
+

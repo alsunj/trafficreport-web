@@ -1,6 +1,8 @@
 // VehicleForm.tsx
-import React from "react";
+import React, { useEffect,  useState } from 'react';
 import Form from 'react-bootstrap/Form';
+import { VehicleTypeService } from '../services/VehicleTypeService';
+import type { IVehicleType } from '../types/IVehicles';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 
@@ -8,19 +10,46 @@ interface VehicleFormProps {
   onSubmit: (event: React.FormEvent<HTMLFormElement>) => void;
 }
 
+
+
 const VehicleForm: React.FC<VehicleFormProps> = ({ onSubmit }) => {
+  const endpoint = "VehicleType/GetVehicleTypes"
+  const [ vehicleTypes, setVehicleTypes] = useState<IVehicleType[] | null>(null);
+  const [ selectedVehicleTypes, setSelectedVehicleTypes] = useState<string>("");
+  const vehicleService = new VehicleTypeService(endpoint);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const fetchedVehicleTypes: IVehicleType[] = await vehicleService.getAll();
+        if (setVehicleTypes) {
+          setVehicleTypes(fetchedVehicleTypes);
+        }
+      } catch (error) {
+        console.error("Error fetching vehicles:", error);
+      }
+    };
+  
+    fetchData();
+  }, []);
+  
+  if (vehicleTypes === null) {
+    return <div>Loading...</div>;
+  }
   return (
-    <Form onSubmit={onSubmit} className="position-absolute top-50 start-50 translate-middle p-4 bg-white rounded shadow">
+    <Form onSubmit={onSubmit} className="position-absolute top-50 start-50 translate-middle p-4 bg-white rounded shadow" style={{ width: '300px' }} >
       <h4>Vehicle</h4>
       <hr />
       <Form.Group className="mb-3">
-        <Form.Label>Vehicle Type</Form.Label>
-        <Form.Select aria-label="Default select example">
-          <option>Choose vehicle</option>
-          <option value="1">Mersu</option>
-          <option value="2">Two</option>
-          <option value="3">Three</option>
-        </Form.Select>
+        <Form.Select
+          value={selectedVehicleTypes}
+          onChange={(e) => setSelectedVehicleTypes(e.target.value)}
+        >
+        <option value="">Select VehicleType</option>
+          {vehicleTypes.map((vehicleType) => (
+            <option key={vehicleType.id} value={vehicleType.id}>{vehicleType.vehicleTypeName}</option>
+          ))}
+      </Form.Select>
       </Form.Group>
       <Form.Group className="mb-3">
         <Form.Label>Color</Form.Label>

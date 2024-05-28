@@ -7,7 +7,7 @@ import { VehicleService } from '../services/VehicleService';
 
 
 const VehicleList: React.FC = () => {
-    const endpoint = "https://alsunjtrafficreport.azurewebsites.net/api/v1/vehicles/Vehicle/GetVehicles";
+    const endpoint = "Vehicle/GetVehicles";
     const [ vehicles, setVehicles] = useState<IVehicle[] | null>(null);
     const vehicleService = new VehicleService(endpoint);
   

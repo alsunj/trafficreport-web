@@ -19,8 +19,8 @@ const VehicleViolationForm: React.FC<VehicleViolationFormProps> = ({
   onCancel,
   onSubmit
 }) => {
-  const endpoint = "https://alsunjtrafficreport.azurewebsites.net/api/v1/violations/Violation/GetViolations";
-  const vehicleendpoint = "https://alsunjtrafficreport.azurewebsites.net/api/v1/vehicles/Vehicle/GetVehicles"
+  const endpoint = "Violation/GetViolations";
+  const vehicleendpoint = "Vehicle/GetVehicles"
   const [ violations, setViolations ] = useState<IViolation[] | null>(null);
   const [ vehicles, setVehicles] = useState<IVehicle[] | null>(null);
   const violationService = new ViolationService(endpoint);
@@ -59,7 +59,7 @@ const VehicleViolationForm: React.FC<VehicleViolationFormProps> = ({
       return <div> Loading vehicles...</div>
     }
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
-    const endpoint1 = "https://alsunjtrafficreport.azurewebsites.net/api/v1/violations/VehicleViolation/PostVehicleViolation";
+    const endpoint1 = "VehicleViolation/post";
     const vehicleViolationService  = new VehicleViolationService(endpoint1);
     event.preventDefault(); // Prevent default form submission
     const vehicleViolation: IVehicleViolation = {
@@ -71,7 +71,7 @@ const VehicleViolationForm: React.FC<VehicleViolationFormProps> = ({
       locationName: locationName,
       createdAt: new Date().toISOString(), 
     };
-    vehicleViolationService.post(vehicleViolation);
+    vehicleViolationService.add(vehicleViolation);
     console.log('Vehicle Violation:', vehicleViolation);
   };
 

@@ -5,7 +5,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import type { IVehicleViolation } from '../types/IViolations';
 import { VehicleViolationService } from "../services/VehicleViolationService";
 const VehicleViolations: React.FC = () => {
-    const endpoint = "https://alsunjtrafficreport.azurewebsites.net/api/v1/violations/VehicleViolation/GetVehicleViolations";
+    const endpoint = "VehicleViolation/GetVehicleViolations";
 
     const [ vehicleViolations, setVehicleViolations ] = useState<IVehicleViolation[] | null>(null);
     const vehicleViolationService = new VehicleViolationService(endpoint);
@@ -15,9 +15,9 @@ const VehicleViolations: React.FC = () => {
             try {
                 // Fetch vehicle violations data from API or context
                 // Replace this with your actual logic to fetch vehicle violations
-                const fetchedVehicleViolations: IVehicleViolation[] = await vehicleViolationService.getAll();
+                const fetchedVehicleViolations: IVehicleViolation[] | undefined  = await vehicleViolationService.getAll();
                 if (setVehicleViolations) {
-                    setVehicleViolations(fetchedVehicleViolations);
+                    setVehicleViolations(fetchedVehicleViolations|| []);
                 }
             } catch (error) {
                 console.error("Error fetching vehicle violations:", error);

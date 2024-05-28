@@ -2,7 +2,7 @@ import { APIProvider } from "@vis.gl/react-google-maps";
 import { createContext, useState } from "react";
 import { IJwtResponse } from "../dto/IJwtResponse";
 import CustomMap from "../Components/customMap";
-
+import { ReactNode } from "react";
 
 interface JwtContextProps {
     jwtResponse: IJwtResponse | null;
@@ -14,17 +14,21 @@ interface JwtContextProps {
     setJwtResponse: null,
   });
 
-
+  export const JwtProvider = ({ children }: { children: ReactNode }) => {
+    const [jwtResponse, setJwtResponse] = useState<IJwtResponse | null>(null);
+  
+    return (
+      <JwtContext.Provider value={{ jwtResponse, setJwtResponse }}>
+        {children}
+      </JwtContext.Provider>
+    );
+  };
 
 
 const Root = () => {
-
-    const [jwtResponse, setJwtResponse] = useState<IJwtResponse | null>(null);
-
     const API_KEY = 'AIzaSyALWYKCItcOvaUOvqRGcMw4WhmeITlw8r4'
     return ( 
-        <JwtContext.Provider value={{ jwtResponse, setJwtResponse }}>
-           
+      <JwtProvider>           
                 <div className="blur-circle blur-circle-1-color blur-circle-1-location blur-circle-container"></div>
                 <div className="blur-circle blur-circle-1-color blur-circle-2-location blur-circle-container"></div>
                 <div className="blur-circle blur-circle-2-color blur-circle-3-location blur-circle-container"></div>
@@ -37,7 +41,7 @@ const Root = () => {
                     </div>
                 </APIProvider>
 
-        </JwtContext.Provider>
+      </JwtProvider>
     );
   }
   export default Root;
