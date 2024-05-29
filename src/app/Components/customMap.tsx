@@ -18,6 +18,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import Sidebar from "@/app/Components/sidebar";
 
 
+
 export interface IExistingVehicleViolations
 {
     id: string;
@@ -124,6 +125,7 @@ const handleMarkerClick = () => {
         >
           <Sidebar></Sidebar>
         </div>
+
 
        {existingVehicleViolations?.map(violation => (
         <AdvancedMarker

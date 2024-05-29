@@ -11,7 +11,7 @@ interface VehicleViolationsByLicenseProps {
 }
 
 const VehicleViolationsByLicense: React.FC<VehicleViolationsByLicenseProps> = ({ licensePlate }) => {
-    let endpoint = `VehicleViolation/GetVehicleViolationsByLicensePlate/${licensePlate}`;
+    let endpoint = `https://alsunjtrafficreport.azurewebsites.net/api/v1/violations/VehicleViolation/GetVehicleViolationsByLicensePlate/${licensePlate}`;
     let vehicleViolationService = new VehicleViolationService(endpoint);
     let [licenseVehicleViolations, setLicenseVehicleViolations] = useState<IVehicleViolation[] | null>(null);
 
