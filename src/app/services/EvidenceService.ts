@@ -40,4 +40,16 @@ export class EvidenceService extends BaseService<IEvidence> {
           };
       }
   }
+  async getAllById(id: string): Promise<IEvidence[]> {
+    try {
+        const response = await this.axios.get<IEvidence[]>(`/${id}`);
+        if (response.status === 200) {
+            return response.data;
+        }
+        return []; // Return an empty array if response status is not 200
+    } catch (e) {
+        console.log('error: ', (e as Error).message);
+        return []; // Return an empty array if an error occurs
+    }
+}
 }

@@ -7,9 +7,9 @@ export interface IEvidenceType
 export interface IEvidence
 {
     id?: string;
-    EvidenceTypeId: string;
-    VehicleViolationId: string;
-    File?:string;
+    evidenceTypeId: string;
+    vehicleViolationId: string;
+    file?:string;
     description: string;
     createdAt?: string;
 }

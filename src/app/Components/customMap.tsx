@@ -136,7 +136,12 @@ const handleMarkerClick = () => {
       ))}
 
         <Marker position={markerLocation} onClick={handleMarkerClick} />
-        
+        <div
+          style={{ position: "absolute", top: "80px", left: "20px", zIndex: 999 }}
+        >
+          <Button onClick={handleButtonClick} imageUrl={randomImageUrl} />
+        </div>
+
         {showVehicleCreateForm && (
           <div
             style={{

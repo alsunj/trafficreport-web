@@ -18,9 +18,19 @@
     top: 0;
     left: 50%;
     transform: translateX(-50%);
-    width: 90%;
+    width: 80%;
     text-align: center;
+  }
+  .top-left {
+    position: absolute;
+    top: 1;
+    left: 98%;
+    transform: translateX(-50%);
+    width: 100%;
+    text-align: center;
+
   }
   .black-text {
     color: black;
   }
+  

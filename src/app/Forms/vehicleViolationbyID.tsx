@@ -10,9 +10,11 @@ import { EvidenceService } from "../services/EvidenceService";
 import type { IComment } from "../types/IEvidences";
 import type { IEvidence } from "../types/IEvidences";
 import type { IAdditionalVehicle } from "../types/IVehicles";
+import type { IVehicle } from "../types/IVehicles";
+import type { IVehicleType } from "../types/IVehicles";
+import { VehicleService } from "../services/VehicleService";
+import { VehicleTypeService } from "../services/VehicleTypeService";
 import VehicleViolationComments from "./VehicleViolationComments";
-import { Form } from "react-bootstrap";
-import Card from 'react-bootstrap/Card';
 import Carousel from 'react-bootstrap/Carousel';
 
 
@@ -22,47 +24,82 @@ interface VehicleViolationsByIdProps {
 
 const VehicleViolationsById: React.FC<VehicleViolationsByIdProps> = ({ id }) => {
     const VehicleViolationendpoint = `VehicleViolation`;
-    const EvidenceEndpoint = 'Evidence/GetEvidences';
+    const EvidenceEndpoint = 'Evidence/GetAllEvidencesByVehicleViolationId';
     const CommentEndpoint = 'Comment/GetAllVehicleViolationCommentsWithNoParentCommentId';
-    const AdditionalVehicleEndpoint = ''
+    const AdditionalVehicleEndpoint = 'AdditionalVehicle/GetAdditionalVehicleByVehicleViolation'
+    const VehicleEndpoint = "Vehicle";
+    const VehicleTypeEndpoint = "VehicleType/GetVehicleTypes"
+
+    const vehicleTypeService = new VehicleTypeService(VehicleTypeEndpoint);
+    const vehicleService = new VehicleService(VehicleEndpoint);
     const additionalVehicleService = new AdditionalVehicleService(AdditionalVehicleEndpoint);
     const evidenceService = new EvidenceService(EvidenceEndpoint);
     const commentService = new CommentService(CommentEndpoint);
-
-
     const vehicleViolationService = new VehicleViolationService(VehicleViolationendpoint);
+
+    const [vehicle, setVehicle] = useState<IVehicle | null>(null);
+    const [additionalVehicles, setAdditionalVehicles] = useState<IVehicle[] | null>(null);
+    const [vehicleTypes, setVehicleTypes] = useState<IVehicleType[] | null>(null);
     const [idVehicleViolation, setidVehicleViolation] = useState<IVehicleViolation | null>(null);
-    const [comments, setComments] = useState<IComment []| null>(null);
+    const [comments, setComments] = useState<IComment[] | null>(null);
     const [evidences, setEvidences] = useState<IEvidence[] | null>(null);
-    const [additionalVehicles, setAdditionalVehicles] = useState<IAdditionalVehicle[] | null>(null);
+    const [additionalVehicleIds, setAdditionalVehicleIds] = useState<IAdditionalVehicle[] | null>(null);
+
+    const [fetchCount, setFetchCount] = useState(0);
+
 
     useEffect(() => {
+
         const fetchData = async () => {
             try {
-                const fetchedVehicleViolation: IVehicleViolation = await vehicleViolationService.get(id);
+
+                const fetchedVehicleViolation = await vehicleViolationService.get(id);
                 setidVehicleViolation(fetchedVehicleViolation);
+
                 const fetchedComments: IComment[] = await commentService.getAllById(id);
                 setComments(fetchedComments);
 
-                const fetchedEvidences: IEvidence[] = await evidenceService.getAll();
+                const fetchedEvidences: IEvidence[] = await evidenceService.getAllById(id);
                 setEvidences(fetchedEvidences);
 
-                const fetchedAdditionalVehicles: IAdditionalVehicle[] = await additionalVehicleService.getAll();
-                setAdditionalVehicles(fetchedAdditionalVehicles);
+                const fetchedVehicleTypes = await vehicleTypeService.getAll();
+                setVehicleTypes(fetchedVehicleTypes);
+                console.log(idVehicleViolation)
+                if (idVehicleViolation) {
+                    const vehicleId = idVehicleViolation.vehicleId
+                    const fetchedVehicle: IVehicle = await vehicleService.get(vehicleId)
+                    setVehicle(fetchedVehicle);
 
-                console.log("Fetched Vehicle Violations:", fetchedVehicleViolation);
-                console.log("Error fetching vehicle violations:", idVehicleViolation);
+                    const fetchedAdditionalVehicleIds: IAdditionalVehicle[] = await additionalVehicleService.getAllById(id);
+                    setAdditionalVehicleIds(fetchedAdditionalVehicleIds);
+
+                    if (additionalVehicleIds) {
+                        const additionalVehiclePromises = additionalVehicleIds.map(async (additionalVehicleId) => {
+                            const fetchedAdditionalVehicle: IVehicle = await vehicleService.get(additionalVehicleId.vehicleId);
+                            return fetchedAdditionalVehicle;
+                        });
+                        const additionalVehiclesData = await Promise.all(additionalVehiclePromises);
+                        setAdditionalVehicles(additionalVehiclesData);
+                    }
+
+
+                }
 
             } catch (error) {
                 console.error("Error fetching vehicle violations:", error);
                 setidVehicleViolation(null);
             }
+            finally {
+                setFetchCount(prevCount => prevCount + 1);
+            }
         };
 
-        fetchData();
-    }, []);
+        if (fetchCount < 10) {
+            fetchData();
+        }
+    }, [fetchCount]);
 
-    if (idVehicleViolation !== null) {
+    if (idVehicleViolation && vehicleTypes !== null) {
         return (
             <div>
                 <Carousel interval={null} >
@@ -71,7 +108,6 @@ const VehicleViolationsById: React.FC<VehicleViolationsByIdProps> = ({ id }) => 
                             className="d-block w-100"
                             src="https://i.ibb.co/wCwHNY1/bg1.png"
                         />
-
                         <Carousel.Caption className="top-center">
                             <h1 className="black-text">Vehicle Violation</h1>
 
@@ -93,75 +129,96 @@ const VehicleViolationsById: React.FC<VehicleViolationsByIdProps> = ({ id }) => 
                             </Table>
                             <h1 className="black-text">Vehicle</h1>
                             <Table striped bordered hover>
-                            <thead>
+                                <thead>
                                     <tr>
                                         <th>Car regnr</th>
                                         <th>color</th>
                                         <th>vehicleName</th>
                                     </tr>
                                 </thead>
+                                <tbody>
+                                    {vehicle && (
+                                        <tr key={vehicle.id}>
+                                            <td>{vehicle.regNr}</td>
+                                            <td>{vehicle.color}</td>
+                                            <td>
+                                                {vehicleTypes && vehicleTypes.find(type => type.id === vehicle.vehicleTypeId)?.vehicleTypeName}
+                                            </td>
+                                        </tr>
+                                    )}
+                                </tbody>
                             </Table>
                             <h1 className="black-text">Additional Vehicles</h1>
+                            <h6><Link to={`/VehicleViolation/edit/${idVehicleViolation.id}`}>Add new AdditionalVehicle</Link></h6>
+
                             <Table striped bordered hover>
-                            <thead>
+                                <thead>
                                     <tr>
-                                    <th><Link to={`/VehicleViolation/edit/${idVehicleViolation.id}`}>Create</Link>
-                                        </th>
                                         <th>Car regnr</th>
-                                        <th>color</th>
-                                        <th>vehicleName</th>
-                                        
+                                        <th>Color</th>
+                                        <th>Vehicle Name</th>
                                     </tr>
-
-                                    <tr key={idVehicleViolation.id}>
-                                        <td></td>
-                                    <td>Car regnr</td>
-                                    <td>color</td>
-                                    <td>vehicleName</td>
-                                    </tr>
-
                                 </thead>
+                                <tbody>
+                                    {additionalVehicles && additionalVehicles.map((vehicle, index) => {
+                                        // Find the corresponding vehicle type
+                                        const vehicleType = vehicleTypes.find(type => type.id === vehicle.vehicleTypeId);
+                                        return (
+                                            <tr key={index}>
+                                                <td>{vehicle.regNr}</td>
+                                                <td>{vehicle.color}</td>
+                                                <td>{vehicleType ? vehicleType.vehicleTypeName : ''}</td>
+                                            </tr>
+                                        );
+                                    })}
+                                </tbody>
                             </Table>
 
-
                         </Carousel.Caption>
-
-
                     </Carousel.Item>
                     <Carousel.Item>
                         <img
                             className="d-block w-100"
                             src="https://i.ibb.co/wCwHNY1/bg1.png"
                         />
-
                         <Carousel.Caption className="top-center">
                             <h1 className="black-text">Comments</h1>
+                            <h6 className="top-left"><Link to={`/VehicleViolation/edit/${idVehicleViolation.id}`}>Add new comment</Link></h6>
 
-                            <VehicleViolationComments  id={id}/>
-                                
-
-
+                            {comments && comments.map((comment) => (
+                                <Table striped bordered hover key={comment.id}>
+                                    <thead>
+                                        <tr>
+                                            <th>Comment</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>{comment.commentText}</td>
+                                        </tr>
+                                        <tr key={`${comment.id}-subcomments`}>
+                                            <td colSpan={1}>
+                                                <VehicleViolationComments id={comment.id} />
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </Table>
+                            ))}
                         </Carousel.Caption>
-
-
                     </Carousel.Item>
-                    <Carousel.Item>
-                        <img
-                            className="d-block w-100"
-                            src="https://i.ibb.co/wCwHNY1/bg1.png"
-                        />
+                    {evidences && evidences.map((evidence) => (
+                        <Carousel.Item key={evidence.id}>
+                            <img className="d-block w-100" src={"https://i.ibb.co/wCwHNY1/bg1.png"} alt={`Evidence ${evidence.id}`} />
+                            <Carousel.Caption className="top-center">
+                            <a href={evidence.file} className="top-left">Link to Image</a>
 
-                        <Carousel.Caption className="top-center">
-                            <h1 className="black-text">Evidence</h1>
-                            
-
-                                
-
-
-                        </Carousel.Caption>
-
-
-                    </Carousel.Item>
+                                <h1 className="black-text">Evidence</h1>
+                                <h5 className="black-text">{evidence.description}</h5>
+                                <br />
+                                <img src={`${evidence.file}`} alt={`Evidence file ${evidence.file}`} className="additional-evidence-image" />
+                            </Carousel.Caption>
+                        </Carousel.Item>
+                    ))}
                 </Carousel>
 
             </div>

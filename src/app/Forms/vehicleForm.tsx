@@ -23,10 +23,9 @@ const VehicleForm: React.FC<VehicleFormProps> = ({ onSubmit }) => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const fetchedVehicleTypes: IVehicleType[] = await vehicleService.getAll();
-        if (setVehicleTypes) {
+        const fetchedVehicleTypes = await vehicleService.getAll();
           setVehicleTypes(fetchedVehicleTypes);
-        }
+        
       } catch (error) {
         console.error("Error fetching vehicles:", error);
       }

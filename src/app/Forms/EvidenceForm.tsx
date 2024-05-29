@@ -41,8 +41,8 @@ const EvidenceForm: React.FC = () => {
     const evidenceService = new EvidenceService(endpoint1);
     event.preventDefault(); 
     const evidence: IEvidence = {
-      EvidenceTypeId: selectedEvidenceeType,
-      VehicleViolationId: "57261cad-56c3-4200-a512-ff28105b5e84",
+      evidenceTypeId: selectedEvidenceeType,
+      vehicleViolationId: "0d79e64c-d0dd-4fe0-a35d-c66b99ef50fa",
       description: "geeg ",
       createdAt: new Date().toISOString(),     
     };
