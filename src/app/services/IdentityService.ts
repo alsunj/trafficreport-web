@@ -1,88 +1,114 @@
 import type { IJwtResponse } from "../dto/IJwtResponse";
 import type { ILoginData } from "../dto/ILoginData";
 import type { IRegisterData } from "../dto/IRegisterData";
-import { BaseService } from "./BaseService";
-import Axios, { AxiosInstance } from 'axios';
 
-export class IdentityService  {
- /*   constructor() {
-        super('v1/identity/account/');
+
+export class IdentityService {
+
+    private endpoint: string;
+
+    constructor(endpoint: string) {
+        this.endpoint = 'https://alsunjtrafficreport.azurewebsites.net/api/v1/identity/Account/';
     }
-
 
     async register(data: IRegisterData): Promise<IJwtResponse | undefined> {
         try {
-            const response = await this.axios.post<IJwtResponse>('register', data);
-
-            console.log('register response', response);
+            const response = await fetch(this.endpoint + 'Register', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(data),
+            });
             if (response.status === 200) {
-                return response.data;
+                console.log(response.body)
+                const responseData = await response.json();
+                return {
+                    token: responseData.jwt,
+                    refreshToken: responseData.refreshToken,
+                    id: responseData.id,
+                };
             }
-            return undefined;
-        } catch (e) {
-            console.log('error: ', (e as Error).message);
-            return undefined;
+
+            if (!response.ok) {
+                throw new Error('Failed to post violation data');
+            }
+        } catch (error) {
+            throw new Error(`Error posting violation data: `);
         }
+        return undefined;
     }
 
     async login(data: ILoginData): Promise<IJwtResponse | undefined> {
         try {
-            const response = await this.axios.post<IJwtResponse>('login', data);
-
-            console.log('login response', response);
+            const response = await fetch(this.endpoint + 'Login', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(data),
+            });
             if (response.status === 200) {
-                return response.data;
+                console.log(response.body)
+                const responseData = await response.json();
+                return {
+                    token: responseData.jwt,
+                    refreshToken: responseData.refreshToken,
+                    id: responseData.id,
+                };
             }
-            return undefined;
-        } catch (e) {
-            console.log('error: ', (e as Error).message);
-            return undefined;
+
+            if (!response.ok) {
+                throw new Error('Failed to post violation data');
+            }
+        } catch (error) {
+            throw new Error(`Error posting violation data: `);
         }
+        return undefined;
     }
 
+
     async logout(data: IJwtResponse): Promise<true | undefined> {
-        console.log(data);
-
         try {
-            const response = await this.axios.post(
-                'logout', 
-                data,
-                {
-                    headers: {
-                        'Authorization': 'Bearer ' + data.token
-                    }
-                }
-            );
-
-            console.log('logout response', response);
+            const response = await fetch(this.endpoint + 'Logout', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(data),
+            });
             if (response.status === 200) {
-                return true;
+                console.log(response.body)
             }
-            return undefined;
-        } catch (e) {
-            console.log('error: ', (e as Error).message);
-            return undefined;
+
+            if (!response.ok) {
+                throw new Error('Failed to post violation data');
+            }
+        } catch (error) {
+            throw new Error(`Error posting violation data: `);
         }
+        return undefined;
     }
 
     async refreshToken(data: IJwtResponse): Promise<IJwtResponse | undefined> {
-        console.log(data);
-        
         try {
-            const response = await this.axios.post<IJwtResponse>(
-                'refreshtoken', 
-                data
-            );
-
-            console.log('refresh token response', response);
+            const response = await fetch(this.endpoint + 'RefreshToken', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(data),
+            });
             if (response.status === 200) {
-                return response.data;
+                console.log(response.body)
             }
-            return undefined;
-        } catch (e) {
-            console.log('error: ', (e as Error).message);
-            return undefined;
+
+            if (!response.ok) {
+                throw new Error('Failed to post violation data');
+            }
+        } catch (error) {
+            throw new Error(`Error posting violation data: `);
         }
+        return undefined;
     }
-*/
 }

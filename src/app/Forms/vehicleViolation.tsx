@@ -7,12 +7,15 @@ import type { IVehicleViolation } from '../types/IViolations';
 import type { IVehicle } from '../types/IVehicles';
 import { VehicleViolationService } from '../services/VehicleViolationService';
 import { VehicleService } from '../services/VehicleService';
+import {JwtContext} from "@/app/routes/Root";
 
 interface VehicleViolationFormProps {
   latlng : string;
   onCancel: () => void;
   onSubmit: (vehicleViolation: IVehicleViolation) => void;
 }
+//console.log("jwt stuff" + JwtContext.Provider);
+
 
 const VehicleViolationForm: React.FC<VehicleViolationFormProps> = ({
   latlng,
@@ -58,6 +61,7 @@ const VehicleViolationForm: React.FC<VehicleViolationFormProps> = ({
     {
       return <div> Loading vehicles...</div>
     }
+
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     const endpoint1 = "VehicleViolation/post";
     const vehicleViolationService  = new VehicleViolationService(endpoint1);
