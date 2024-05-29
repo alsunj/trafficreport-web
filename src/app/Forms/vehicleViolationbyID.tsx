@@ -10,6 +10,9 @@ import { EvidenceService } from "../services/EvidenceService";
 import type { IComment } from "../types/IEvidences";
 import type { IEvidence } from "../types/IEvidences";
 import type { IAdditionalVehicle } from "../types/IVehicles";
+import VehicleViolationComments from "./VehicleViolationComments";
+import { Form } from "react-bootstrap";
+import Card from 'react-bootstrap/Card';
 import Carousel from 'react-bootstrap/Carousel';
 
 
@@ -19,8 +22,8 @@ interface VehicleViolationsByIdProps {
 
 const VehicleViolationsById: React.FC<VehicleViolationsByIdProps> = ({ id }) => {
     const VehicleViolationendpoint = `VehicleViolation`;
-    const EvidenceEndpoint = '';
-    const CommentEndpoint = '';
+    const EvidenceEndpoint = 'Evidence/GetEvidences';
+    const CommentEndpoint = 'Comment/GetAllVehicleViolationCommentsWithNoParentCommentId';
     const AdditionalVehicleEndpoint = ''
     const additionalVehicleService = new AdditionalVehicleService(AdditionalVehicleEndpoint);
     const evidenceService = new EvidenceService(EvidenceEndpoint);
@@ -28,17 +31,17 @@ const VehicleViolationsById: React.FC<VehicleViolationsByIdProps> = ({ id }) => 
 
 
     const vehicleViolationService = new VehicleViolationService(VehicleViolationendpoint);
-    const [idVehicleViolation, setidVehicleViolation] = useState<IVehicleViolation| null>(null);
-    const [comments, setComments] = useState<IComment[] | null>(null);
+    const [idVehicleViolation, setidVehicleViolation] = useState<IVehicleViolation | null>(null);
+    const [comments, setComments] = useState<IComment []| null>(null);
     const [evidences, setEvidences] = useState<IEvidence[] | null>(null);
     const [additionalVehicles, setAdditionalVehicles] = useState<IAdditionalVehicle[] | null>(null);
 
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const fetchedVehicleViolation : IVehicleViolation = await vehicleViolationService.get(id);
+                const fetchedVehicleViolation: IVehicleViolation = await vehicleViolationService.get(id);
                 setidVehicleViolation(fetchedVehicleViolation);
-                const fetchedComments: IComment[] = await commentService.getAll();
+                const fetchedComments: IComment[] = await commentService.getAllById(id);
                 setComments(fetchedComments);
 
                 const fetchedEvidences: IEvidence[] = await evidenceService.getAll();
@@ -59,62 +62,113 @@ const VehicleViolationsById: React.FC<VehicleViolationsByIdProps> = ({ id }) => 
         fetchData();
     }, []);
 
-    if (idVehicleViolation  !== null)
-        {
-            return (
-                <Carousel>
-                <div>
-                    <Table striped bordered hover>
-                        <thead>
-                            <tr>
-                                <th>Vehicle ID</th>
-                                <th>Violation ID</th>
-                                <th>Account ID</th>
-                                <th>Description</th>
-                                <th>Coordinates</th>
-                                <th>Location Name</th>
-                                <th>Created At</th>
-                                <th>Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr key={idVehicleViolation.id}>
-                                <td>{idVehicleViolation.vehicleId}</td>
-                                <td>{idVehicleViolation.violationId}</td>
-                                <td>{idVehicleViolation.appUserId}</td>
-                                <td>{idVehicleViolation.description}</td>
-                                <td>{idVehicleViolation.coordinates}</td>
-                                <td>{idVehicleViolation.locationName}</td>
-                                <td>{idVehicleViolation.createdAt}</td>
-                                <td>
-                                    <Link to={`/VehicleViolation/edit/${idVehicleViolation.id}`}>Edit</Link> |
-                                    <Link to={`/VehicleViolation/delete/${idVehicleViolation.id}`}>Delete</Link>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </Table>
+    if (idVehicleViolation !== null) {
+        return (
+            <div>
+                <Carousel interval={null} >
                     <Carousel.Item>
+                        <img
+                            className="d-block w-100"
+                            src="https://i.ibb.co/wCwHNY1/bg1.png"
+                        />
 
-        <Carousel.Caption>
-          <h3>Second slide label</h3>
-          <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
-        </Carousel.Caption>
-      </Carousel.Item>
-      <Carousel.Item>
-        <Carousel.Caption>
-          <h3>Third slide label</h3>
-          <p>
-            Praesent commodo cursus magna, vel scelerisque nisl consectetur.
-          </p>
-        </Carousel.Caption>
-      </Carousel.Item>
-                    
-                </div>
+                        <Carousel.Caption className="top-center">
+                            <h1 className="black-text">Vehicle Violation</h1>
+
+                            <Table striped bordered hover>
+                                <thead>
+                                    <tr>
+                                        <th>Description</th>
+                                        <th>Location Name</th>
+                                        <th>Created At</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr key={idVehicleViolation.id}>
+                                        <td>{idVehicleViolation.description}</td>
+                                        <td>{idVehicleViolation.locationName}</td>
+                                        <td>{idVehicleViolation.createdAt}</td>
+                                    </tr>
+                                </tbody>
+                            </Table>
+                            <h1 className="black-text">Vehicle</h1>
+                            <Table striped bordered hover>
+                            <thead>
+                                    <tr>
+                                        <th>Car regnr</th>
+                                        <th>color</th>
+                                        <th>vehicleName</th>
+                                    </tr>
+                                </thead>
+                            </Table>
+                            <h1 className="black-text">Additional Vehicles</h1>
+                            <Table striped bordered hover>
+                            <thead>
+                                    <tr>
+                                    <th><Link to={`/VehicleViolation/edit/${idVehicleViolation.id}`}>Create</Link>
+                                        </th>
+                                        <th>Car regnr</th>
+                                        <th>color</th>
+                                        <th>vehicleName</th>
+                                        
+                                    </tr>
+
+                                    <tr key={idVehicleViolation.id}>
+                                        <td></td>
+                                    <td>Car regnr</td>
+                                    <td>color</td>
+                                    <td>vehicleName</td>
+                                    </tr>
+
+                                </thead>
+                            </Table>
+
+
+                        </Carousel.Caption>
+
+
+                    </Carousel.Item>
+                    <Carousel.Item>
+                        <img
+                            className="d-block w-100"
+                            src="https://i.ibb.co/wCwHNY1/bg1.png"
+                        />
+
+                        <Carousel.Caption className="top-center">
+                            <h1 className="black-text">Comments</h1>
+
+                            <VehicleViolationComments  id={id}/>
+                                
+
+
+                        </Carousel.Caption>
+
+
+                    </Carousel.Item>
+                    <Carousel.Item>
+                        <img
+                            className="d-block w-100"
+                            src="https://i.ibb.co/wCwHNY1/bg1.png"
+                        />
+
+                        <Carousel.Caption className="top-center">
+                            <h1 className="black-text">Evidence</h1>
+                            
+
+                                
+
+
+                        </Carousel.Caption>
+
+
+                    </Carousel.Item>
                 </Carousel>
 
-            );
-        };
-        }
+            </div>
 
-       
+        );
+    };
+}
+
+
 export default VehicleViolationsById;

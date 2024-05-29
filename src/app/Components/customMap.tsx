@@ -110,7 +110,6 @@ const handleMarkerClick = () => {
 
   return (
     <div style={{ height: "98vh", position: "relative" }}>
-        <Sidebar></Sidebar>
       <Map
         defaultZoom={14}
         defaultCenter={{ lat: 59.39552664613792, lng: 24.671705895803086 }}
@@ -120,6 +119,12 @@ const handleMarkerClick = () => {
         mapId={"5588886"}
 
       >
+         <div
+          style={{ position: "absolute", top: "20px", left: "20px", zIndex: 999 }}
+        >
+          <Sidebar></Sidebar>
+        </div>
+
        {existingVehicleViolations?.map(violation => (
         <AdvancedMarker
           key={violation.id}
@@ -131,11 +136,7 @@ const handleMarkerClick = () => {
       ))}
 
         <Marker position={markerLocation} onClick={handleMarkerClick} />
-        <div
-          style={{ position: "absolute", top: "20px", left: "20px", zIndex: 999 }}
-        >
-          <Button onClick={handleButtonClick} imageUrl={randomImageUrl} />
-        </div>
+        
         {showVehicleCreateForm && (
           <div
             style={{
@@ -165,7 +166,7 @@ const handleMarkerClick = () => {
           }}
         >
          
-        <VehicleForm onSubmit={handleSubmitForm} 
+        <EvidenceForm
         />
         </div>
       )}

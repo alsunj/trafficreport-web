@@ -1,16 +1,17 @@
 export interface IEvidenceType
 {
-    id : string;
+    id?: string;
     evidenceTypeName: string;
 }
 
 export interface IEvidence
 {
-    id: string;
-    evidenceTypeId: string;
-    vehicleViolationId: string;
+    id?: string;
+    EvidenceTypeId: string;
+    VehicleViolationId: string;
+    File?:string;
     description: string;
-    createdAt: string;
+    createdAt?: string;
 }
 
 export interface IComment

@@ -21,7 +21,7 @@ const Sidebar: React.FC = () => {
     return (
         <>
             <Button variant="primary" onClick={handleShow}>
-                Launch
+               Vehicles
             </Button>
 
             <Offcanvas className="custom-offcanvas" show={show} onHide={handleClose}>

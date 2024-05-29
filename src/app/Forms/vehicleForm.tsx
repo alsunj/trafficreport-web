@@ -3,6 +3,8 @@ import React, { useEffect,  useState } from 'react';
 import Form from 'react-bootstrap/Form';
 import { VehicleTypeService } from '../services/VehicleTypeService';
 import type { IVehicleType } from '../types/IVehicles';
+import Spinner from 'react-bootstrap/Spinner';
+
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 
@@ -34,8 +36,10 @@ const VehicleForm: React.FC<VehicleFormProps> = ({ onSubmit }) => {
   }, []);
   
   if (vehicleTypes === null) {
-    return <div>Loading...</div>;
+    return <div><Spinner animation="border" /></div>;
   }
+
+  
   return (
     <Form onSubmit={onSubmit} className="position-absolute top-50 start-50 translate-middle p-4 bg-white rounded shadow" style={{ width: '300px' }} >
       <h4>Vehicle</h4>

@@ -13,3 +13,14 @@
 .custom-offcanvas {
     width: 20% !important;
 }
+.top-center {
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 90%;
+    text-align: center;
+  }
+  .black-text {
+    color: black;
+  }

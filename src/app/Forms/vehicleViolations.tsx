@@ -15,9 +15,9 @@ const VehicleViolations: React.FC = () => {
             try {
                 // Fetch vehicle violations data from API or context
                 // Replace this with your actual logic to fetch vehicle violations
-                const fetchedVehicleViolations: IVehicleViolation[] | undefined  = await vehicleViolationService.getAll();
+                const fetchedVehicleViolations: IVehicleViolation[]  = await vehicleViolationService.getAll();
                 if (setVehicleViolations) {
-                    setVehicleViolations(fetchedVehicleViolations|| []);
+                    setVehicleViolations(fetchedVehicleViolations);
                 }
             } catch (error) {
                 console.error("Error fetching vehicle violations:", error);
