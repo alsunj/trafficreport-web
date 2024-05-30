@@ -5,15 +5,20 @@ import { IEvidence, IEvidenceType } from "../types/IEvidences";
 import { useEffect, useState } from "react";
 import { EvidenceTypeService } from "../services/EvidenceTypeService";
 import { EvidenceService } from "../services/EvidenceService";
+import { FormEvent } from "react";
 
 interface EvidenceFormProps {
+  vehicleViolationId: string;
+  onSubmit: (event: React.FormEvent<HTMLFormElement>) => void;
+
 }
 
-const EvidenceForm: React.FC = () => {
+const EvidenceForm: React.FC<EvidenceFormProps> = ({ vehicleViolationId,  onSubmit }) => {
   const endpoint = "EvidenceType/GetEvidenceTypes"
   const [evidenceTypes, setEvidenceTypes] = useState<IEvidenceType[] | null>(null);
   const [selectedEvidenceeType, setSelectedEvidenceType] = useState<string>("");
-  const [ selectedFile, setSelectedFile ] = useState<File | null>(null);
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  const [description, setDescription] = useState<string>("");
   const evidenceTypeService = new EvidenceTypeService(endpoint);
 
   useEffect(() => {
@@ -35,28 +40,40 @@ const EvidenceForm: React.FC = () => {
     }
   };
 
-
+  const handleDescriptionChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    const newValue = e.target.value;
+    if (newValue.length <= 255) {
+      setDescription(newValue);
+    }
+  };
+  const handleGoBack = (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+    onSubmit(event as any); // Call the onSubmit function to handle going back
+  }
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     const endpoint1 = "Evidence/post";
     const evidenceService = new EvidenceService(endpoint1);
-    event.preventDefault(); 
+    event.preventDefault();
     const evidence: IEvidence = {
       evidenceTypeId: selectedEvidenceeType,
-      vehicleViolationId: "0d79e64c-d0dd-4fe0-a35d-c66b99ef50fa",
-      description: "geeg ",
-      createdAt: new Date().toISOString(),     
+      vehicleViolationId: vehicleViolationId,
+      description: description,
+      createdAt: new Date().toISOString(),
     };
     if (selectedFile) {
-      try{
-        const result = evidenceService.postWithFile(evidence, selectedFile); // Pass selected file to post method
+      try {
+        evidenceService.postWithFile(evidence, selectedFile); // Pass selected file to post method
         console.log('Result:', evidence);
       }
-      catch{
+      catch {
         console.error("No file selected");
       }
-    } 
-    
+      finally {
+        onSubmit(event);
+      }
+    }
+
   };
+
   if (evidenceTypes === null) {
     return <div>Loading...</div>;
   }
@@ -77,15 +94,25 @@ const EvidenceForm: React.FC = () => {
       </Form.Group>
       <Form.Group className="mb-3">
         <Form.Label>Description</Form.Label>
-        <Form.Control as="textarea" rows={3} placeholder="Enter Description" />
+        <Form.Control
+          as="textarea"
+          rows={3}
+          placeholder="Enter Description"
+          value={description}
+          onChange={handleDescriptionChange}
+        />
+        <Form.Text className="text-muted">
+          {description.length}/255 characters
+        </Form.Text>
       </Form.Group>
       <Form.Group controlId="formFile" className="mb-3">
         <Form.Label>Default file input example</Form.Label>
         <Form.Control type="file" onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleFileChange(e)} />
       </Form.Group>
 
-      <div className="d-grid">
-        <button type="submit" className="btn btn-primary">Submit Evidence</button>
+      <div className="d-grid gap-2">
+      <button type="submit" className="btn btn-primary">Submit Evidence</button>
+        <button type="button" className="btn btn-secondary" onClick={handleGoBack}>Go Back</button>
       </div>
     </Form>
   );

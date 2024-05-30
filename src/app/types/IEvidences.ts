@@ -16,9 +16,10 @@ export interface IEvidence
 
 export interface IComment
 {
-    id: string;
+    id?: string;
     commentText: string;
-    parentCommentId: string;
-    accountId: string;
+    parentCommentId: string | undefined;
+    appUserId: string;
     vehicleViolationId: string;
+    createdAt: string;
 }

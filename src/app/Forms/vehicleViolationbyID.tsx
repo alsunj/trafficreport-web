@@ -16,13 +16,21 @@ import { VehicleService } from "../services/VehicleService";
 import { VehicleTypeService } from "../services/VehicleTypeService";
 import VehicleViolationComments from "./VehicleViolationComments";
 import Carousel from 'react-bootstrap/Carousel';
+import CloseButton from 'react-bootstrap/CloseButton';
 
 
 interface VehicleViolationsByIdProps {
-    id: string;
+    vehicleViolationId: string;
+    showVehicleViolationsById: boolean;
+    onSubmit: () => void;
+    onClose: () => void;
+    toggleEvidenceForm: () => void;
+    toggleCommentForm: (ParentCommentid?: string) => void;
+    toggleAdditionalVehicleForm: () => void;
+
 }
 
-const VehicleViolationsById: React.FC<VehicleViolationsByIdProps> = ({ id }) => {
+const VehicleViolationsById: React.FC<VehicleViolationsByIdProps> = ({ vehicleViolationId, showVehicleViolationsById, onSubmit, onClose, toggleEvidenceForm, toggleCommentForm, toggleAdditionalVehicleForm }) => {
     const VehicleViolationendpoint = `VehicleViolation`;
     const EvidenceEndpoint = 'Evidence/GetAllEvidencesByVehicleViolationId';
     const CommentEndpoint = 'Comment/GetAllVehicleViolationCommentsWithNoParentCommentId';
@@ -44,22 +52,22 @@ const VehicleViolationsById: React.FC<VehicleViolationsByIdProps> = ({ id }) => 
     const [comments, setComments] = useState<IComment[] | null>(null);
     const [evidences, setEvidences] = useState<IEvidence[] | null>(null);
     const [additionalVehicleIds, setAdditionalVehicleIds] = useState<IAdditionalVehicle[] | null>(null);
+    
 
     const [fetchCount, setFetchCount] = useState(0);
-
 
     useEffect(() => {
 
         const fetchData = async () => {
             try {
 
-                const fetchedVehicleViolation = await vehicleViolationService.get(id);
+                const fetchedVehicleViolation = await vehicleViolationService.get(vehicleViolationId);
                 setidVehicleViolation(fetchedVehicleViolation);
 
-                const fetchedComments: IComment[] = await commentService.getAllById(id);
+                const fetchedComments: IComment[] = await commentService.getAllById(vehicleViolationId);
                 setComments(fetchedComments);
 
-                const fetchedEvidences: IEvidence[] = await evidenceService.getAllById(id);
+                const fetchedEvidences: IEvidence[] = await evidenceService.getAllById(vehicleViolationId);
                 setEvidences(fetchedEvidences);
 
                 const fetchedVehicleTypes = await vehicleTypeService.getAll();
@@ -70,7 +78,7 @@ const VehicleViolationsById: React.FC<VehicleViolationsByIdProps> = ({ id }) => 
                     const fetchedVehicle: IVehicle = await vehicleService.get(vehicleId)
                     setVehicle(fetchedVehicle);
 
-                    const fetchedAdditionalVehicleIds: IAdditionalVehicle[] = await additionalVehicleService.getAllById(id);
+                    const fetchedAdditionalVehicleIds: IAdditionalVehicle[] = await additionalVehicleService.getAllById(vehicleViolationId);
                     setAdditionalVehicleIds(fetchedAdditionalVehicleIds);
 
                     if (additionalVehicleIds) {
@@ -102,14 +110,22 @@ const VehicleViolationsById: React.FC<VehicleViolationsByIdProps> = ({ id }) => 
     if (idVehicleViolation && vehicleTypes !== null) {
         return (
             <div>
+                <div className="top-leftbutton">
+                    <CloseButton onClick={onClose} />
+                </div>
                 <Carousel interval={null} >
                     <Carousel.Item>
+
                         <img
                             className="d-block w-100"
                             src="https://i.ibb.co/wCwHNY1/bg1.png"
                         />
+
                         <Carousel.Caption className="top-center">
+                        <h4 className="top-right" onClick={toggleEvidenceForm}>Create Evidence</h4>
+
                             <h1 className="black-text">Vehicle Violation</h1>
+
 
                             <Table striped bordered hover>
                                 <thead>
@@ -149,7 +165,7 @@ const VehicleViolationsById: React.FC<VehicleViolationsByIdProps> = ({ id }) => 
                                 </tbody>
                             </Table>
                             <h1 className="black-text">Additional Vehicles</h1>
-                            <h6><Link to={`/VehicleViolation/edit/${idVehicleViolation.id}`}>Add new AdditionalVehicle</Link></h6>
+                            <h4 className="black-text" onClick={toggleAdditionalVehicleForm}>Create AdditionalVehicle</h4>
 
                             <Table striped bordered hover>
                                 <thead>
@@ -161,7 +177,6 @@ const VehicleViolationsById: React.FC<VehicleViolationsByIdProps> = ({ id }) => 
                                 </thead>
                                 <tbody>
                                     {additionalVehicles && additionalVehicles.map((vehicle, index) => {
-                                        // Find the corresponding vehicle type
                                         const vehicleType = vehicleTypes.find(type => type.id === vehicle.vehicleTypeId);
                                         return (
                                             <tr key={index}>
@@ -181,9 +196,10 @@ const VehicleViolationsById: React.FC<VehicleViolationsByIdProps> = ({ id }) => 
                             className="d-block w-100"
                             src="https://i.ibb.co/wCwHNY1/bg1.png"
                         />
+
                         <Carousel.Caption className="top-center">
                             <h1 className="black-text">Comments</h1>
-                            <h6 className="top-left"><Link to={`/VehicleViolation/edit/${idVehicleViolation.id}`}>Add new comment</Link></h6>
+                            <h4 className="top-right" onClick={() => toggleCommentForm(undefined)}>Create Comment</h4>
 
                             {comments && comments.map((comment) => (
                                 <Table striped bordered hover key={comment.id}>
@@ -196,9 +212,11 @@ const VehicleViolationsById: React.FC<VehicleViolationsByIdProps> = ({ id }) => 
                                         <tr>
                                             <td>{comment.commentText}</td>
                                         </tr>
+                                        <h4 className="black-text" onClick={() => toggleCommentForm(comment.id)}>Create Comment</h4>
+
                                         <tr key={`${comment.id}-subcomments`}>
                                             <td colSpan={1}>
-                                                <VehicleViolationComments id={comment.id} />
+                                            <VehicleViolationComments id={comment.id ?? ''} />
                                             </td>
                                         </tr>
                                     </tbody>
@@ -210,7 +228,7 @@ const VehicleViolationsById: React.FC<VehicleViolationsByIdProps> = ({ id }) => 
                         <Carousel.Item key={evidence.id}>
                             <img className="d-block w-100" src={"https://i.ibb.co/wCwHNY1/bg1.png"} alt={`Evidence ${evidence.id}`} />
                             <Carousel.Caption className="top-center">
-                            <a href={evidence.file} className="top-left">Link to Image</a>
+                                <a href={evidence.file} className="top-right">Link to Image</a>
 
                                 <h1 className="black-text">Evidence</h1>
                                 <h5 className="black-text">{evidence.description}</h5>

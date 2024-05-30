@@ -12,7 +12,7 @@ import {JwtContext} from "@/app/routes/Root";
 interface VehicleViolationFormProps {
   latlng : string;
   onCancel: () => void;
-  onSubmit: (vehicleViolation: IVehicleViolation) => void;
+  onSubmit: () => void;
 }
 //console.log("jwt stuff" + JwtContext.Provider);
 
@@ -63,20 +63,30 @@ const VehicleViolationForm: React.FC<VehicleViolationFormProps> = ({
     }
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+    
     const endpoint1 = "VehicleViolation/post";
     const vehicleViolationService  = new VehicleViolationService(endpoint1);
     event.preventDefault(); // Prevent default form submission
     const vehicleViolation: IVehicleViolation = {
       vehicleId: vehicleLicensePlate, 
       violationId: selectedViolation, 
-      appUserId: "232c297d-276f-4e2e-a6ed-20950466e828",
+      appUserId: "6a9def19-7a61-4791-8d3a-fa26bd8b8d3b",
       description: description,
       coordinates: latlng,
       locationName: locationName,
       createdAt: new Date().toISOString(), 
     };
-    vehicleViolationService.add(vehicleViolation);
+    try {
+      vehicleViolationService.add(vehicleViolation);
+    } catch (error) {
+      
+    }
+    finally{
+      onSubmit();
+    }
     console.log('Vehicle Violation:', vehicleViolation);
+    
+
   };
 
   return (
