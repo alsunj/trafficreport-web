@@ -7,12 +7,14 @@ import type { IVehicleViolation } from '../types/IViolations';
 import type { IVehicle } from '../types/IVehicles';
 import { VehicleViolationService } from '../services/VehicleViolationService';
 import { VehicleService } from '../services/VehicleService';
-import {JwtContext} from "@/app/routes/Root";
+
 
 interface VehicleViolationFormProps {
-  latlng : string;
+  latlng: string;
   onCancel: () => void;
   onSubmit: () => void;
+  toggleViolationForm: () => void;
+  toggleVehicleForm: () => void;
 }
 //console.log("jwt stuff" + JwtContext.Provider);
 
@@ -20,12 +22,15 @@ interface VehicleViolationFormProps {
 const VehicleViolationForm: React.FC<VehicleViolationFormProps> = ({
   latlng,
   onCancel,
-  onSubmit
+  onSubmit,
+  toggleViolationForm,
+  toggleVehicleForm
+
 }) => {
   const endpoint = "Violation/GetViolations";
   const vehicleendpoint = "Vehicle/GetVehicles"
-  const [ violations, setViolations ] = useState<IViolation[] | null>(null);
-  const [ vehicles, setVehicles] = useState<IVehicle[] | null>(null);
+  const [violations, setViolations] = useState<IViolation[] | null>(null);
+  const [vehicles, setVehicles] = useState<IVehicle[] | null>(null);
   const violationService = new ViolationService(endpoint);
   const vehicleService = new VehicleService(vehicleendpoint)
   const [selectedViolation, setSelectedViolation] = useState<string>("");
@@ -41,11 +46,10 @@ const VehicleViolationForm: React.FC<VehicleViolationFormProps> = ({
           setViolations(fetchedViolations);
           console.log("latlng on siin" + latlng);
         }
-        if (setVehicles)
-          {
-            setVehicles(fetchedVehicles)
+        if (setVehicles) {
+          setVehicles(fetchedVehicles)
 
-          }
+        }
       } catch (error) {
         console.error("Error fetching vehicles:", error);
       }
@@ -57,41 +61,42 @@ const VehicleViolationForm: React.FC<VehicleViolationFormProps> = ({
   if (violations === null) {
     return <div>Loading violations...</div>;
   }
-  if(vehicles == null)
-    {
-      return <div> Loading vehicles...</div>
-    }
+  if (vehicles == null) {
+    return <div> Loading vehicles...</div>
+  }
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
-    
+
     const endpoint1 = "VehicleViolation/post";
-    const vehicleViolationService  = new VehicleViolationService(endpoint1);
+    const vehicleViolationService = new VehicleViolationService(endpoint1);
     event.preventDefault(); // Prevent default form submission
     const vehicleViolation: IVehicleViolation = {
-      vehicleId: vehicleLicensePlate, 
-      violationId: selectedViolation, 
+      vehicleId: vehicleLicensePlate,
+      violationId: selectedViolation,
       appUserId: "6a9def19-7a61-4791-8d3a-fa26bd8b8d3b",
       description: description,
       coordinates: latlng,
       locationName: locationName,
-      createdAt: new Date().toISOString(), 
+      createdAt: new Date().toISOString(),
     };
     try {
       vehicleViolationService.add(vehicleViolation);
     } catch (error) {
-      
+
     }
-    finally{
+    finally {
       onSubmit();
     }
     console.log('Vehicle Violation:', vehicleViolation);
-    
+
 
   };
 
   return (
     <Form onSubmit={handleSubmit} className="position-absolute top-50 start-50 translate-middle p-4 bg-white rounded shadow" style={{ width: '500px' }}>
       <h4>Vehicle Violation</h4>
+      <button type="submit" className="btn btn-primary" onClick={toggleViolationForm}>Create Violation</button>
+      <button type="submit" className="btn btn-primary" onClick={toggleVehicleForm}>Create Vehicle</button>
       <hr />
       <Form.Group className="mb-3">
         <Form.Label>Vehicle License Plate</Form.Label>
@@ -99,19 +104,19 @@ const VehicleViolationForm: React.FC<VehicleViolationFormProps> = ({
           value={vehicleLicensePlate}
           onChange={(e) => setVehicleLicensePlate(e.target.value)}
         >
-        <option value="">Select Violation</option>
+          <option value="">Select Violation</option>
           {vehicles.map((vehicle) => (
             <option key={vehicle.id} value={vehicle.id}>{vehicle.regNr}</option>
           ))}
-      </Form.Select>
+        </Form.Select>
 
       </Form.Group>
 
 
       <Form.Group className="mb-3">
         <Form.Label>Violation</Form.Label>
-        <Form.Select 
-          value={selectedViolation} 
+        <Form.Select
+          value={selectedViolation}
           onChange={(e) => setSelectedViolation(e.target.value)}
         >
           <option value="">Select Violation</option>
@@ -124,25 +129,25 @@ const VehicleViolationForm: React.FC<VehicleViolationFormProps> = ({
 
       <Form.Group className="mb-3">
         <Form.Label>Description</Form.Label>
-        <Form.Control 
-          as="textarea" 
-          rows={3} 
-          placeholder="Describe the incident" 
+        <Form.Control
+          as="textarea"
+          rows={3}
+          placeholder="Describe the incident"
           value={description}
           onChange={(e) => setDescription(e.target.value)}
         />
       </Form.Group>
       <Form.Group className="mb-3">
         <Form.Label>Location Name</Form.Label>
-        <Form.Control 
-          type="text" 
-          placeholder="Enter Location Name" 
+        <Form.Control
+          type="text"
+          placeholder="Enter Location Name"
           value={locationName}
           onChange={(e) => setLocationName(e.target.value)}
         />
       </Form.Group>
       <div className="d-grid">
-        <button type="submit" className="btn btn-primary">Submit Violation</button>
+        <button type="submit" className="btn btn-primary">Submit VehicleViolation</button>
         <button type="button" className="btn btn-secondary" onClick={onCancel}>Cancel</button>
       </div>
     </Form>

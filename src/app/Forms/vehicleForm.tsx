@@ -2,19 +2,21 @@
 import React, { useEffect,  useState } from 'react';
 import Form from 'react-bootstrap/Form';
 import { VehicleTypeService } from '../services/VehicleTypeService';
+import { VehicleService } from '../services/VehicleService';
 import type { IVehicleType } from '../types/IVehicles';
+import type { IVehicle } from '../types/IVehicles';
 import Spinner from 'react-bootstrap/Spinner';
-
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 
 interface VehicleFormProps {
-  onSubmit: (event: React.FormEvent<HTMLFormElement>) => void;
+  onSubmit: () => void;
+  onCancel: () => void;
 }
 
 
 
-const VehicleForm: React.FC<VehicleFormProps> = ({ onSubmit }) => {
+const VehicleForm: React.FC<VehicleFormProps> = ({ onSubmit, onCancel}) => {
   const endpoint = "VehicleType/GetVehicleTypes"
   const [ vehicleTypes, setVehicleTypes] = useState<IVehicleType[] | null>(null);
   const [ selectedVehicleTypes, setSelectedVehicleTypes] = useState<string>("");
@@ -38,9 +40,30 @@ const VehicleForm: React.FC<VehicleFormProps> = ({ onSubmit }) => {
     return <div><Spinner animation="border" /></div>;
   }
 
+  const handleSubmit = () => {
+
+    const vehicleEndPoint = "Vehicle/post";
+    const vehicleService = new VehicleService(vehicleEndPoint);
+    const vehicle: IVehicle = {
+      vehicleTypeId: selectedVehicleTypes,
+      color: "green",
+      regNr: "555grn"
+    };
+    try {
+      vehicleService.add(vehicle);
+    } catch (error) {
+
+    }
+    finally {
+      onSubmit();
+    }
+
+
+  };
+
   
   return (
-    <Form onSubmit={onSubmit} className="position-absolute top-50 start-50 translate-middle p-4 bg-white rounded shadow" style={{ width: '300px' }} >
+    <Form onSubmit={handleSubmit} className="position-absolute top-50 start-50 translate-middle p-4 bg-white rounded shadow" style={{ width: '300px' }} >
       <h4>Vehicle</h4>
       <hr />
       <Form.Group className="mb-3">
@@ -64,6 +87,8 @@ const VehicleForm: React.FC<VehicleFormProps> = ({ onSubmit }) => {
       </Form.Group>
       <div className="d-grid">
         <button type="submit" className="btn btn-primary">Create</button>
+        <button type="button" className="btn btn-secondary" onClick={onCancel}>Cancel</button>
+
       </div>
     </Form>
   );

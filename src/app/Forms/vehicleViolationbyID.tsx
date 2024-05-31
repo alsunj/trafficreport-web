@@ -125,6 +125,7 @@ const VehicleViolationsById: React.FC<VehicleViolationsByIdProps> = ({ vehicleVi
                         <h4 className="top-right" onClick={toggleEvidenceForm}>Create Evidence</h4>
 
                             <h1 className="black-text">Vehicle Violation</h1>
+                            <hr className="black-text" />
 
 
                             <Table striped bordered hover>
@@ -144,6 +145,8 @@ const VehicleViolationsById: React.FC<VehicleViolationsByIdProps> = ({ vehicleVi
                                 </tbody>
                             </Table>
                             <h1 className="black-text">Vehicle</h1>
+                            <hr className="black-text"/>
+
                             <Table striped bordered hover>
                                 <thead>
                                     <tr>
@@ -165,7 +168,9 @@ const VehicleViolationsById: React.FC<VehicleViolationsByIdProps> = ({ vehicleVi
                                 </tbody>
                             </Table>
                             <h1 className="black-text">Additional Vehicles</h1>
+                            
                             <h4 className="black-text" onClick={toggleAdditionalVehicleForm}>Create AdditionalVehicle</h4>
+                            <hr className="black-text"/>
 
                             <Table striped bordered hover>
                                 <thead>
@@ -199,6 +204,8 @@ const VehicleViolationsById: React.FC<VehicleViolationsByIdProps> = ({ vehicleVi
 
                         <Carousel.Caption className="top-center">
                             <h1 className="black-text">Comments</h1>
+                            <hr className="black-text"/>
+
                             <h4 className="top-right" onClick={() => toggleCommentForm(undefined)}>Create Comment</h4>
 
                             {comments && comments.map((comment) => (
@@ -231,6 +238,7 @@ const VehicleViolationsById: React.FC<VehicleViolationsByIdProps> = ({ vehicleVi
                                 <a href={evidence.file} className="top-right">Link to Image</a>
 
                                 <h1 className="black-text">Evidence</h1>
+                                <hr className="black-text"/>
                                 <h5 className="black-text">{evidence.description}</h5>
                                 <br />
                                 <img src={`${evidence.file}`} alt={`Evidence file ${evidence.file}`} className="additional-evidence-image" />

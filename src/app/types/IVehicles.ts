@@ -1,9 +1,9 @@
 export interface IVehicle{
-    id: string;
+    id?: string;
     vehicleTypeId: string;
     color: string;
     regNr: string;
-    rating: number;
+    rating?: number;
 }
 export interface IVehicleType{
     id: string;

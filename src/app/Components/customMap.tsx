@@ -1,15 +1,15 @@
 import React, { useState, useEffect } from "react";
 import { Map, Marker, AdvancedMarker, MapMouseEvent } from "@vis.gl/react-google-maps";
-import Button from "./button";
 import VehicleViolationForm from "../Forms/vehicleViolation";
 import { VehicleViolationService } from "../services/VehicleViolationService";
 import CommentForm from "../Forms/CommentForm";
 import VehicleViolationsById from "../Forms/vehicleViolationbyID";
 import 'bootstrap/dist/css/bootstrap.min.css';
-
+import VehicleForm from "../Forms/vehicleForm";
 import Sidebar from "@/app/Components/sidebar";
 import EvidenceForm from "../Forms/EvidenceForm";
 import AdditionalVehicleForm from "../Forms/AdditionalVehicleForm";
+import ViolationForm from "../Forms/violationForm";
 
 
 export interface IExistingVehicleViolations {
@@ -32,9 +32,22 @@ const CustomMap: React.FC<{ refreshMap: () => void }> = ({ refreshMap }) => {
 
 
   const [showEvidenceForm, setShowEvidenceForm] = useState(false);
+  const [showViolationForm, setShowViolationForm] = useState(false);
+  const [showVehicleForm, setShowVehicleForm] = useState(false);
   const [showCommentForm, setShowCommentForm] = useState(false);
   const [showAdditionalVehicleForm, setShowAdditionalVehicleForm] = useState(false);
   const [parentCommentId, setParentCommentId] = useState<string | null>(null);
+
+  const toggleVehicleForm = () => {
+    setShowVehicleForm(prev => !prev);
+    setVehicleViolationCreateForm(false);
+  }
+
+  const toggleViolationForm = () => {
+    setShowViolationForm(prev => !prev);
+    setVehicleViolationCreateForm(false)
+
+  }
 
   const toggleEvidenceForm = () => {
     setShowEvidenceForm(prev => !prev); // Toggle the state
@@ -60,34 +73,6 @@ const CustomMap: React.FC<{ refreshMap: () => void }> = ({ refreshMap }) => {
     setShowAdditionalVehicleForm(prev => !prev); // Toggle the state
     setShowVehicleViolationsById(false);
   };
-
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-
-        const fetchedVehicleViolations = await vehicleViolationService.getAll();
-        const transformedVehicleViolations: IExistingVehicleViolations[] = fetchedVehicleViolations.map(vehicleViolation => {
-          const [lat, lng] = vehicleViolation.coordinates.split(';').map(Number);
-          return {
-            id: vehicleViolation.id || '',
-            lat,
-            lng
-          };
-        });
-        setExistingVehicleViolations(transformedVehicleViolations);
-
-      } catch (error) {
-        console.error("Error fetching vehicle violations:", error);
-      }
-    };
-
-    fetchData();
-  }, [refreshMap]);
-
-
-
-
-
 
   const handleMapDblClick = (event: MapMouseEvent) => {
     const { lat, lng } = event.detail.latLng || { lat: 0, lng: 0 };
@@ -130,8 +115,28 @@ const CustomMap: React.FC<{ refreshMap: () => void }> = ({ refreshMap }) => {
   };
   const crashicon = "https://cdn-icons-png.flaticon.com/512/1576/1576488.png"
 
-  const randomImageUrl =
-    "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRb9UGESK6l_GZCNxF1Ul5G8pg6mgJIHXhYflYKMTg7Mw&s";
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+
+        const fetchedVehicleViolations = await vehicleViolationService.getAll();
+        const transformedVehicleViolations: IExistingVehicleViolations[] = fetchedVehicleViolations.map(vehicleViolation => {
+          const [lat, lng] = vehicleViolation.coordinates.split(';').map(Number);
+          return {
+            id: vehicleViolation.id || '',
+            lat,
+            lng
+          };
+        });
+        setExistingVehicleViolations(transformedVehicleViolations);
+
+      } catch (error) {
+        console.error("Error fetching vehicle violations:", error);
+      }
+    };
+
+    fetchData();
+  }, [refreshMap]);
 
   return (
     <div style={{ height: "98vh", position: "relative" }}>
@@ -155,6 +160,8 @@ const CustomMap: React.FC<{ refreshMap: () => void }> = ({ refreshMap }) => {
               latlng={`${markerLocation!.lat};${markerLocation!.lng}`}
               onCancel={closeVehicleVCreateForm}
               onSubmit={SubmitAndCloseVehicleVCreateForm}
+              toggleViolationForm={toggleViolationForm}
+              toggleVehicleForm={toggleVehicleForm}
             />
           </div>
 
@@ -196,6 +203,22 @@ const CustomMap: React.FC<{ refreshMap: () => void }> = ({ refreshMap }) => {
 
           />
 
+        </div>
+        )}
+        {showVehicleForm && (<div className="centered-div">
+          <VehicleForm
+            onSubmit={toggleVehicleForm}
+            onCancel={toggleVehicleForm}
+
+          />
+
+        </div>
+        )}
+         {showViolationForm && (<div className="centered-div">
+          <ViolationForm
+            onSubmit={toggleViolationForm}
+            onCancel={toggleViolationForm}
+          />
         </div>
         )}
 
