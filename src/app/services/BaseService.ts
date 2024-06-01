@@ -33,7 +33,6 @@ export class BaseService<TEntity> extends BaseServiceHost {
                 data: response.data
             };
         } catch (error: any) {
-            // Check if the error is an Axios error and has a response
             if (error.response && error.response.status === 409) {
                 return {
                     errors: ['Vehicle with that license plate is already in the system.']

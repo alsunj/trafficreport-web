@@ -80,7 +80,6 @@ const VehicleForm: React.FC<VehicleFormProps> = ({ onSubmit, onCancel}) => {
       const result = await vehicleService.add(vehicle);
       if (result.errors && result.errors.length > 0) {
           console.error("Error submitting vehicle:", result.errors);
-          // Handle the specific error message
           if (result.errors.includes('Vehicle with that license plate is already in the system.')) {
               alert('Vehicle with that license plate is already in the system.');
           } else {
