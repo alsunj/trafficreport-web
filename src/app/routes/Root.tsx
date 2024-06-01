@@ -12,6 +12,7 @@ const Root = () => {
     
     const API_KEY = 'AIzaSyALWYKCItcOvaUOvqRGcMw4WhmeITlw8r4';
     return (
+
         <JwtProvider>
             <APIProvider apiKey={API_KEY}>
                 <div style={{ height: "100vh" }}>

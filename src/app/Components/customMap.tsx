@@ -33,7 +33,7 @@ const CustomMap: React.FC<customMapProps> = ({ refreshMap }) => {
   const [showVehicleCreateForm, setVehicleViolationCreateForm] = useState(false);
   const [showVehicleViolationsById, setShowVehicleViolationsById] = useState(false);
   const [selectedViolationId, setSelectedViolationId] = useState<string | null>(null);
-  
+
   const [showEvidenceForm, setShowEvidenceForm] = useState(false);
   const [showViolationForm, setShowViolationForm] = useState(false);
   const [showVehicleForm, setShowVehicleForm] = useState(false);
@@ -118,6 +118,7 @@ const CustomMap: React.FC<customMapProps> = ({ refreshMap }) => {
   const crashicon = "https://cdn-icons-png.flaticon.com/512/1576/1576488.png"
 
   useEffect(() => {
+    console.log('3');
     const fetchData = async () => {
       try {
 
@@ -138,7 +139,7 @@ const CustomMap: React.FC<customMapProps> = ({ refreshMap }) => {
     };
 
     fetchData();
-  }, [refreshMap]);
+  }, [selectedViolationId]);
 
   return (
     <div style={{ height: "98vh", position: "relative" }}>

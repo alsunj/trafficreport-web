@@ -86,7 +86,6 @@ const VehicleViolationForm: React.FC<VehicleViolationFormProps> = ({
     const vehicleViolation: IVehicleViolation = {
       vehicleId: vehicleLicensePlate,
       violationId: selectedViolation,
-      appUserId: "6a9def19-7a61-4791-8d3a-fa26bd8b8d3b",
       description: description,
       coordinates: latlng,
       locationName: locationName,

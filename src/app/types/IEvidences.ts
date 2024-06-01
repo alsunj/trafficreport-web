@@ -19,7 +19,7 @@ export interface IComment
     id?: string;
     commentText: string;
     parentCommentId: string | undefined;
-    appUserId: string;
+    appUserId?: string;
     vehicleViolationId: string;
     createdAt: string;
 }

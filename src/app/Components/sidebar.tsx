@@ -55,6 +55,7 @@ const Sidebar: React.FC = () => {
         setShowLoginForm(!showLoginForm);
     };
 
+
     const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
         setSubmittedPlate(licensePlate);
@@ -121,8 +122,6 @@ const Sidebar: React.FC = () => {
             setValidationErrors(["An error occurred during registration. Please try again later."]);
         }
     };
-
-    console.log(useContext(JwtContext).jwtResponse);
 
     return (
         <>

@@ -36,7 +36,6 @@ const CommentForm: React.FC<CommentFormProps> = ({ onSubmit, vehicleViolationid,
     const comment: IComment = {
       commentText: commentText,
       parentCommentId: ParentCommentid,
-      appUserId:"6a9def19-7a61-4791-8d3a-fa26bd8b8d3b",
       vehicleViolationId: vehicleViolationid,
       createdAt: new Date().toISOString()
     };

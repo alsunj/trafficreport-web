@@ -9,7 +9,7 @@ export interface IVehicleViolation{
     id?: string;
     vehicleId: string;
     violationId: string;
-    appUserId: string;
+    appUserId?: string;
     description: string;
     coordinates: string;
     locationName: string;

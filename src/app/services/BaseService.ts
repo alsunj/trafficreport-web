@@ -11,8 +11,6 @@ export class BaseService<TEntity> extends BaseServiceHost {
     async getAll(): Promise<TEntity[]> {
         try {
             const response = await this.axios.get<TEntity[]>('', {
-                headers: {
-                }
             });
             if (response.status === 200) {
                 return response.data;
@@ -31,9 +29,6 @@ export class BaseService<TEntity> extends BaseServiceHost {
     async add(entity: TEntity): Promise<IResultObject<TEntity>> {
         try {
             let response = await this.axios.post('', entity, {
-                headers: {
-                    Authorization: 'Bearer '
-                }
             });
             return {
                 data: response.data
@@ -48,9 +43,6 @@ export class BaseService<TEntity> extends BaseServiceHost {
         async update(entity: TEntity): Promise<IResultObject<TEntity>> {
             try {
                 let response = await this.axios.put(``, entity, {
-                    headers: {
-                        Authorization: 'Bearer '
-                    }
                 });
                 return {
                     data: response.data
@@ -90,9 +82,6 @@ export class BaseService<TEntity> extends BaseServiceHost {
             console.log("getAllEnums");
             try {
                 let response = await this.axios.get(`/`, {
-                    headers: {
-                        Authorization: 'Bearer '
-                    }
                 });
                 console.log(response);
     
