@@ -1,22 +1,35 @@
 import React, { useEffect,  useState } from 'react';
 import Table from 'react-bootstrap/Table';
-import { Link } from 'react-router-dom';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import type { IVehicle } from '../types/IVehicles';
 import { VehicleService } from '../services/VehicleService';
+import type { IVehicleType } from '../types/IVehicles';
+import { VehicleTypeService } from '../services/VehicleTypeService';
+interface VehicleListProps {
+  licensePlate: string;
+}
 
 
-const VehicleList: React.FC = () => {
-    const endpoint = "Vehicle/GetVehicles";
-    const [ vehicles, setVehicles] = useState<IVehicle[] | null>(null);
+const VehicleList: React.FC<VehicleListProps> = ({licensePlate}) => {
+    const endpoint = "Vehicle/GetVehicleByLicensePlate";
+    const [vehicle, setVehicle] = useState<IVehicle | null>(null);
     const vehicleService = new VehicleService(endpoint);
-  
+
+    const VehicleTypeEndPoint = "VehicleType"
+    const [ vehicleType, setVehicleType] = useState<IVehicleType | null>(null);
+    const vehicleTypeService = new VehicleTypeService(VehicleTypeEndPoint);
+
+
+
     useEffect(() => {
       const fetchData = async () => {
         try {
-          const fetchedVehicles: IVehicle[] = await vehicleService.getAll();
-          if (setVehicles) {
-            setVehicles(fetchedVehicles);
+          const fetchedVehicle = await vehicleService.get(licensePlate);
+          setVehicle(fetchedVehicle);
+
+          if (fetchedVehicle) {
+            const fetchedVehicleType = await vehicleTypeService.get(fetchedVehicle.vehicleTypeId!);
+            setVehicleType(fetchedVehicleType);
           }
         } catch (error) {
           console.error("Error fetching vehicles:", error);
@@ -24,43 +37,36 @@ const VehicleList: React.FC = () => {
       };
   
       fetchData();
-    }, [setVehicles]);
+    }, [licensePlate]);
   
-    if (vehicles === null) {
-      return <div>Loading...</div>;
+    if (vehicle === null) {
+      return <div>No Vehcile found with this regnr {licensePlate}</div>;
     }
   
     return (
       <div>
-        <h1>Vehicles</h1>
-        <p>
-          <Link to="/Vehicle/create">Create new</Link>
-        </p>
+        <h1>Vehicle Details</h1>
         <Table striped bordered hover>
-          <thead>
-            <tr>
-              <th>Vehicle Type ID</th>
-              <th>Color</th>
-              <th>Registration Number</th>
-              <th>Rating</th>
-              <th>Actions</th>
-            </tr>
-          </thead>
           <tbody>
-            {vehicles.map((vehicle: IVehicle) => (
-              <tr key={vehicle.id}>
-                <td>{vehicle.vehicleTypeId}</td>
-                <td>{vehicle.color}</td>
-                <td>{vehicle.regNr}</td>
-                <td>{vehicle.rating}</td>
-                <td>
-                  <Link to={`/Vehicle/edit/${vehicle.id}`}>Edit</Link> | 
-                  <Link to={`/Vehicle/delete/${vehicle.id}`}>Delete</Link>
-                </td>
-              </tr>
-            ))}
+            <tr>
+              <td>VehicleName</td>
+              <td>{vehicleType?.vehicleTypeName}</td>
+            </tr>
+            <tr>
+              <td>Color</td>
+              <td>{vehicle.color}</td>
+            </tr>
+            <tr>
+              <td>Registration Number</td>
+              <td>{vehicle.regNr}</td>
+            </tr>
+            <tr>
+              <td>Rating</td>
+              <td>{vehicle.rating}</td>
+            </tr>
           </tbody>
         </Table>
+
       </div>
     );
   };

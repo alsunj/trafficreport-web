@@ -40,24 +40,24 @@ const CustomMap: React.FC<{ refreshMap: () => void }> = ({ refreshMap }) => {
 
   const toggleVehicleForm = () => {
     setShowVehicleForm(prev => !prev);
-    setVehicleViolationCreateForm(false);
+    setVehicleViolationCreateForm(prev => !prev);
   }
 
   const toggleViolationForm = () => {
     setShowViolationForm(prev => !prev);
-    setVehicleViolationCreateForm(false)
+    setVehicleViolationCreateForm(prev => !prev)
 
   }
 
   const toggleEvidenceForm = () => {
     setShowEvidenceForm(prev => !prev); // Toggle the state
-    setShowVehicleViolationsById(false);
+    setShowVehicleViolationsById(prev => !prev);
 
   };
 
   const toggleCommentForm = (ParentCommentId?: string) => {
     setShowCommentForm(prev => !prev); // Toggle the state
-    setShowVehicleViolationsById(false);
+    setShowVehicleViolationsById(prev => !prev);
     
     if (ParentCommentId !== undefined) {
       setParentCommentId(ParentCommentId); // If ParentCommentId is neither null nor undefined, set the state
@@ -71,7 +71,7 @@ const CustomMap: React.FC<{ refreshMap: () => void }> = ({ refreshMap }) => {
 
   const toggleAdditionalVehicleForm = () => {
     setShowAdditionalVehicleForm(prev => !prev); // Toggle the state
-    setShowVehicleViolationsById(false);
+    setShowVehicleViolationsById(prev => !prev);
   };
 
   const handleMapDblClick = (event: MapMouseEvent) => {
@@ -105,7 +105,6 @@ const CustomMap: React.FC<{ refreshMap: () => void }> = ({ refreshMap }) => {
       if (confirmation) {
         const latlng = markerLocation.lat.toString() + ";" + markerLocation.lng.toString();
         setVehicleViolationCreateForm(true);
-        alert("Creating vehicle violation..." + latlng);
       } else {
         alert("Vehicle violation creation canceled.");
       }
@@ -182,6 +181,8 @@ const CustomMap: React.FC<{ refreshMap: () => void }> = ({ refreshMap }) => {
           <EvidenceForm
             vehicleViolationId={selectedViolationId}
             onSubmit={toggleEvidenceForm}
+            onCancel={toggleEvidenceForm}
+
           />
 
         </div>
@@ -197,9 +198,12 @@ const CustomMap: React.FC<{ refreshMap: () => void }> = ({ refreshMap }) => {
 
           </div>
         )}
-        {showAdditionalVehicleForm && (<div className="centered-div">
+        {showAdditionalVehicleForm && selectedViolationId && (<div className="centered-div">
           <AdditionalVehicleForm
             onSubmit={toggleAdditionalVehicleForm}
+            onCancel={toggleAdditionalVehicleForm}
+            vehicleViolationid={selectedViolationId}
+
 
           />
 

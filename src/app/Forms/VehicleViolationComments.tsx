@@ -4,6 +4,7 @@ import Table from 'react-bootstrap/Table';
 import { Link } from 'react-router-dom';
 import { CommentService } from '../services/CommentService';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import { Spinner } from "react-bootstrap";
 
 
 
@@ -32,7 +33,7 @@ const VehicleViolationComments: React.FC<VehicleViolationCommentsByIdProps> = ({
 
         if (comments === null)
             {
-                return <div>Loading...</div>;
+              return <div><Spinner animation="border" /></div>;
             }
 
   return (

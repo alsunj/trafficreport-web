@@ -1,24 +1,24 @@
 import React, { useEffect, useState } from "react";
 import Table from 'react-bootstrap/Table';
-import { Link } from 'react-router-dom';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import type { IVehicleViolation } from '../types/IViolations';
 import { VehicleViolationService } from '../services/VehicleViolationService';
 import '../../../styles.css';
 
 interface VehicleViolationsByLicenseProps {
-    licensePlate: string | undefined;
+    licensePlate: string;
 }
 
 const VehicleViolationsByLicense: React.FC<VehicleViolationsByLicenseProps> = ({ licensePlate }) => {
-    let endpoint = `VehicleViolation/GetVehicleViolationsByLicensePlate/${licensePlate}`;
+    let endpoint = `VehicleViolation/GetVehicleViolationsByLicensePlate`;
     let vehicleViolationService = new VehicleViolationService(endpoint);
     let [licenseVehicleViolations, setLicenseVehicleViolations] = useState<IVehicleViolation[] | null>(null);
 
     useEffect(() => {
         const fetchData = async () => {
             try {
-                let fetchedVehicleViolations = await vehicleViolationService.getAll();
+                let fetchedVehicleViolations = await vehicleViolationService.getAllByRegNr(licensePlate);
+                console.log(fetchedVehicleViolations)
                 setLicenseVehicleViolations(fetchedVehicleViolations);
             } catch (error) {
                 setLicenseVehicleViolations(null);
@@ -27,11 +27,11 @@ const VehicleViolationsByLicense: React.FC<VehicleViolationsByLicenseProps> = ({
         };
 
         fetchData();
-    }, [licenseVehicleViolations]);
+    }, [licensePlate]);
 
-    if (!licenseVehicleViolations)
-        {
-            return <div>....</div>
+    if (licenseVehicleViolations && licenseVehicleViolations.length === 0) {
+        
+            return <div>No Vehicle Violations for {licensePlate}</div>;
         }
 
     return (
@@ -56,8 +56,7 @@ const VehicleViolationsByLicense: React.FC<VehicleViolationsByLicenseProps> = ({
                             <td>{vehicleViolation.locationName}</td>
                             <td>{vehicleViolation.createdAt}</td>
                             <td>
-                                <Link to={`/VehicleViolation/edit/${vehicleViolation.id}`}>Edit</Link> |
-                                <Link to={`/VehicleViolation/delete/${vehicleViolation.id}`}>Delete</Link>
+
                             </td>
                         </tr>
                     ))}

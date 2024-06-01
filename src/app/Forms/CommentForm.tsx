@@ -7,7 +7,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 interface CommentFormProps {
    vehicleViolationid: string;
    ParentCommentid: undefined | string;
-   onSubmit: (event: React.FormEvent<HTMLFormElement>) => void;
+   onSubmit: () => void;
    onCancel: () => void;
 
 
@@ -25,10 +25,14 @@ const CommentForm: React.FC<CommentFormProps> = ({ onSubmit, vehicleViolationid,
     }
   };
 
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if(!commentText){
+      alert("Please fill out all fields.");
+      return;
+    }
     const endpoint = "Comment/post"
     const commentService = new CommentService(endpoint);
-    event.preventDefault();
     const comment: IComment = {
       commentText: commentText,
       parentCommentId: ParentCommentid,
@@ -40,7 +44,7 @@ const CommentForm: React.FC<CommentFormProps> = ({ onSubmit, vehicleViolationid,
         commentService.add(comment)
         console.log(comment)
     }
-    finally{onSubmit(event);}
+    finally{onSubmit();}
       
     
 
@@ -73,8 +77,6 @@ const CommentForm: React.FC<CommentFormProps> = ({ onSubmit, vehicleViolationid,
     </Form>
   );
 };
-//parentcommnt
-//accountid
-//vehicle violation id
+
 
 export default CommentForm;

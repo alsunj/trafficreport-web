@@ -5,15 +5,14 @@ import { IEvidence, IEvidenceType } from "../types/IEvidences";
 import { useEffect, useState } from "react";
 import { EvidenceTypeService } from "../services/EvidenceTypeService";
 import { EvidenceService } from "../services/EvidenceService";
-import { FormEvent } from "react";
-
+import { Spinner } from "react-bootstrap";
 interface EvidenceFormProps {
   vehicleViolationId: string;
-  onSubmit: (event: React.FormEvent<HTMLFormElement>) => void;
-
+  onSubmit: () => void;
+  onCancel: () => void;
 }
 
-const EvidenceForm: React.FC<EvidenceFormProps> = ({ vehicleViolationId,  onSubmit }) => {
+const EvidenceForm: React.FC<EvidenceFormProps> = ({ vehicleViolationId,  onSubmit, onCancel }) => {
   const endpoint = "EvidenceType/GetEvidenceTypes"
   const [evidenceTypes, setEvidenceTypes] = useState<IEvidenceType[] | null>(null);
   const [selectedEvidenceeType, setSelectedEvidenceType] = useState<string>("");
@@ -24,7 +23,7 @@ const EvidenceForm: React.FC<EvidenceFormProps> = ({ vehicleViolationId,  onSubm
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const fetchedVehicleTypes: IEvidenceType[] = await evidenceTypeService.getAll();
+        const fetchedVehicleTypes = await evidenceTypeService.getAll();
         setEvidenceTypes(fetchedVehicleTypes);
 
       } catch (error) {
@@ -46,13 +45,16 @@ const EvidenceForm: React.FC<EvidenceFormProps> = ({ vehicleViolationId,  onSubm
       setDescription(newValue);
     }
   };
-  const handleGoBack = (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
-    onSubmit(event as any); // Call the onSubmit function to handle going back
-  }
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+
+    if (!selectedEvidenceeType || !description || !selectedFile) {
+      alert("Please fill out all fields.");
+      return;
+    }
     const endpoint1 = "Evidence/post";
     const evidenceService = new EvidenceService(endpoint1);
-    event.preventDefault();
     const evidence: IEvidence = {
       evidenceTypeId: selectedEvidenceeType,
       vehicleViolationId: vehicleViolationId,
@@ -62,20 +64,18 @@ const EvidenceForm: React.FC<EvidenceFormProps> = ({ vehicleViolationId,  onSubm
     if (selectedFile) {
       try {
         evidenceService.postWithFile(evidence, selectedFile); // Pass selected file to post method
-        console.log('Result:', evidence);
+        onSubmit();
       }
       catch {
         console.error("No file selected");
       }
-      finally {
-        onSubmit(event);
-      }
+      
     }
 
   };
 
   if (evidenceTypes === null) {
-    return <div>Loading...</div>;
+    return <div><Spinner animation="border" /></div>;
   }
   return (
     <Form onSubmit={handleSubmit} className="position-absolute top-50 start-50 translate-middle p-4 bg-white rounded shadow" style={{ width: '700px' }}>
@@ -112,7 +112,7 @@ const EvidenceForm: React.FC<EvidenceFormProps> = ({ vehicleViolationId,  onSubm
 
       <div className="d-grid gap-2">
       <button type="submit" className="btn btn-primary">Submit Evidence</button>
-        <button type="button" className="btn btn-secondary" onClick={handleGoBack}>Go Back</button>
+        <button type="button" className="btn btn-secondary" onClick={onCancel}>Go Back</button>
       </div>
     </Form>
   );

@@ -7,6 +7,7 @@ import type { IVehicleViolation } from '../types/IViolations';
 import type { IVehicle } from '../types/IVehicles';
 import { VehicleViolationService } from '../services/VehicleViolationService';
 import { VehicleService } from '../services/VehicleService';
+import { Spinner } from 'react-bootstrap';
 
 
 interface VehicleViolationFormProps {
@@ -57,19 +58,31 @@ const VehicleViolationForm: React.FC<VehicleViolationFormProps> = ({
 
     fetchData();
   }, [setViolations]);
+  const areAllFieldsFilled = (): boolean => {
+    return (
+      selectedViolation !== "" &&
+      vehicleLicensePlate !== "" &&
+      description !== "" &&
+      locationName !== ""
+    );
+  };
 
   if (violations === null) {
-    return <div>Loading violations...</div>;
+    return <div><Spinner animation="border" /></div>;
   }
   if (vehicles == null) {
-    return <div> Loading vehicles...</div>
+    return <div><Spinner animation="border" /></div>;
   }
 
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault(); 
 
+    if (!areAllFieldsFilled()) {
+      alert("Please fill out all fields.");
+      return;
+    }
     const endpoint1 = "VehicleViolation/post";
     const vehicleViolationService = new VehicleViolationService(endpoint1);
-    event.preventDefault(); // Prevent default form submission
     const vehicleViolation: IVehicleViolation = {
       vehicleId: vehicleLicensePlate,
       violationId: selectedViolation,
@@ -81,14 +94,11 @@ const VehicleViolationForm: React.FC<VehicleViolationFormProps> = ({
     };
     try {
       vehicleViolationService.add(vehicleViolation);
+      onSubmit();
     } catch (error) {
 
     }
-    finally {
-      onSubmit();
-    }
-    console.log('Vehicle Violation:', vehicleViolation);
-
+    
 
   };
 

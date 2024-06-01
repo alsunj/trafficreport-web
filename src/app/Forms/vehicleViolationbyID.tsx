@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import Table from 'react-bootstrap/Table';
-import { Link } from 'react-router-dom';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import type { IVehicleViolation } from '../types/IViolations';
 import { VehicleViolationService } from '../services/VehicleViolationService';
@@ -17,6 +16,7 @@ import { VehicleTypeService } from "../services/VehicleTypeService";
 import VehicleViolationComments from "./VehicleViolationComments";
 import Carousel from 'react-bootstrap/Carousel';
 import CloseButton from 'react-bootstrap/CloseButton';
+import { Spinner } from "react-bootstrap";
 
 
 interface VehicleViolationsByIdProps {
@@ -106,6 +106,10 @@ const VehicleViolationsById: React.FC<VehicleViolationsByIdProps> = ({ vehicleVi
             fetchData();
         }
     }, [fetchCount]);
+    if (idVehicleViolation && vehicleTypes == null){
+        return <div><Spinner animation="border" /></div>;
+
+    }
 
     if (idVehicleViolation && vehicleTypes !== null) {
         return (

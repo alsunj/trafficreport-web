@@ -2,7 +2,7 @@ export interface IViolation{
     id?: string;
     violationType: number;
     violationName: string;
-    severity: number;
+    severity?: number;
 }
 
 export interface IVehicleViolation{

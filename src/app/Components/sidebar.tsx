@@ -11,6 +11,7 @@ import { IRegisterData } from "@/app/dto/IRegisterData";
 import { IdentityService } from "@/app/services/IdentityService";
 import LoginForm from "@/app/routes/Identity/loginForm";
 import RegisterForm from "@/app/routes/Identity/registerForm";
+import VehicleList from '../Forms/VehicleList';
 
 const Sidebar: React.FC = () => {
     const [show, setShow] = useState(false);
@@ -122,7 +123,7 @@ const Sidebar: React.FC = () => {
     return (
         <>
             <Button variant="primary" onClick={handleShow}>
-                Vehicles
+                Main Menu
             </Button>
 
             <Offcanvas className="custom-offcanvas" show={show} onHide={handleClose}>
@@ -165,6 +166,10 @@ const Sidebar: React.FC = () => {
                         setLicensePlate={setLicensePlate}
                         onSubmit={handleSubmit}
                     />
+                    {submittedPlate && (
+                        <VehicleList licensePlate={submittedPlate} />
+                    )}
+                    
                     {submittedPlate && (
                         <VehicleViolationsByLicense licensePlate={submittedPlate} />
                     )}

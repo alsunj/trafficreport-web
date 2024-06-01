@@ -13,7 +13,7 @@ export interface IVehicleType{
 }
 
 export interface IAdditionalVehicle{
-    id: string;
+    id?: string;
     vehicleId: string;
     vehicleViolationId: string;
 }

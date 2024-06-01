@@ -4,7 +4,8 @@ import { Link } from 'react-router-dom';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import type { IVehicleViolation } from '../types/IViolations';
 import { VehicleViolationService } from "../services/VehicleViolationService";
-const VehicleViolations: React.FC = () => {
+import { Spinner } from "react-bootstrap";
+/*const VehicleViolations: React.FC = () => {
     const endpoint = "VehicleViolation/GetVehicleViolations";
 
     const [ vehicleViolations, setVehicleViolations ] = useState<IVehicleViolation[] | null>(null);
@@ -28,7 +29,7 @@ const VehicleViolations: React.FC = () => {
     }, [setVehicleViolations]);
 
     if (vehicleViolations === null) {
-        return <div>Loading...</div>;
+        return <div><Spinner animation="border" /></div>;
     }
 
     return (
@@ -61,8 +62,6 @@ const VehicleViolations: React.FC = () => {
                             <td>{vehicleViolation.locationName}</td>
                             <td>{vehicleViolation.createdAt}</td>
                             <td>
-                                <Link to={`/VehicleViolation/edit/${vehicleViolation.id}`}>Edit</Link> |
-                                <Link to={`/VehicleViolation/delete/${vehicleViolation.id}`}>Delete</Link>
                             </td>
                         </tr>
                     ))}
@@ -72,4 +71,4 @@ const VehicleViolations: React.FC = () => {
     );
 };
 
-export default VehicleViolations;
+export default VehicleViolations;*/
