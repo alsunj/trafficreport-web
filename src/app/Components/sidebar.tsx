@@ -4,7 +4,6 @@ import Offcanvas from 'react-bootstrap/Offcanvas';
 import VehicleViolationsByLicense from '@/app/Forms/vehicleViolationsByLicense';
 import '../../../styles.css';
 import FieldSubmit from "@/app/Components/fieldSubmit";
-import { JwtContext } from "@/app/routes/Root";
 import { Link, useNavigate } from "react-router-dom";
 import { ILoginData } from "@/app/dto/ILoginData";
 import { IRegisterData } from "@/app/dto/IRegisterData";
@@ -12,6 +11,7 @@ import { IdentityService } from "@/app/services/IdentityService";
 import LoginForm from "@/app/routes/Identity/loginForm";
 import RegisterForm from "@/app/routes/Identity/registerForm";
 import VehicleList from '../Forms/VehicleList';
+import {JwtContext} from "@/app/routes/JwtContext";
 
 
 const Sidebar: React.FC = () => {

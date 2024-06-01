@@ -1,21 +1,12 @@
-import Axios, { AxiosInstance } from 'axios';
-import Sidebar from "@/app/Components/sidebar";
+import { AxiosInstance } from 'axios';
+import {getAxiosInstance} from "@/app/routes/Identity/apiClient";
+
 
 export abstract class BaseServiceHost {
+    protected axios: AxiosInstance;
 
-  private static hostBaseURL = "https://alsunjtrafficreport.azurewebsites.net/api/v1/";
-
-  protected axios: AxiosInstance;
-
-  constructor(baseUrl: string) {
-      this.axios = Axios.create(
-          {
-              baseURL: BaseServiceHost.hostBaseURL + baseUrl,
-              headers: {
-                'Content-Type': 'application/json',
-              }
-          }
-      )
-  }
-
+    constructor(baseUrl: string) {
+        this.axios = getAxiosInstance();
+        this.axios.defaults.baseURL += baseUrl;
+    }
 }

@@ -1,9 +1,6 @@
 import { BaseServiceHost } from "@/BaseServiceHost";
 import type { AxiosError } from "axios";
 import type { IResultObject } from "../types/IResultObject";
-import Sidebar from "@/app/Components/sidebar";
-import customMap from "@/app/Components/customMap";
-import CustomMap from "@/app/Components/customMap";
 
 
 export class BaseService<TEntity> extends BaseServiceHost {
@@ -11,13 +8,10 @@ export class BaseService<TEntity> extends BaseServiceHost {
         super(baseUrl);
     }
 
-
-
     async getAll(): Promise<TEntity[]> {
         try {
             const response = await this.axios.get<TEntity[]>('', {
                 headers: {
-                    Authorization: 'Bearer ' + customMap.propTypes?.jwt?.name
                 }
             });
             if (response.status === 200) {
