@@ -18,11 +18,17 @@ export interface IExistingVehicleViolations {
   lng: number;
 }
 
+interface customMapProps {
+  jwt: string;
+  refreshMap: () => void;
+}
+
 
 const endpoint = "VehicleViolation/GetVehicleViolations";
 const vehicleViolationService = new VehicleViolationService(endpoint);
 
-const CustomMap: React.FC<{ refreshMap: () => void }> = ({ refreshMap }) => {
+
+const CustomMap: React.FC<customMapProps> = ({ jwt, refreshMap }) => {
   const [markerLocation, setMarkerLocation] = useState<{ lat: number; lng: number } | undefined>(undefined);
   const [existingVehicleViolations, setExistingVehicleViolations] = useState<IExistingVehicleViolations[] | null>(null);
   const [showVehicleCreateForm, setVehicleViolationCreateForm] = useState(false);
@@ -30,6 +36,7 @@ const CustomMap: React.FC<{ refreshMap: () => void }> = ({ refreshMap }) => {
   const [selectedViolationId, setSelectedViolationId] = useState<string | null>(null);
 
 
+  const jwtValue = jwt;
 
   const [showEvidenceForm, setShowEvidenceForm] = useState(false);
   const [showViolationForm, setShowViolationForm] = useState(false);

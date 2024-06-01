@@ -1,5 +1,5 @@
 import { APIProvider } from "@vis.gl/react-google-maps";
-import { createContext, useState, ReactNode, useCallback } from "react";
+import {createContext, useState, ReactNode, useCallback, useContext} from "react";
 import { IJwtResponse } from "../dto/IJwtResponse";
 import CustomMap from "../Components/customMap";
 
@@ -22,8 +22,10 @@ export const JwtProvider = ({ children }: { children: ReactNode }) => {
     );
 };
 
-
 const Root = () => {
+
+    const { jwtResponse } = useContext(JwtContext);
+    const jwt = jwtResponse ? jwtResponse.token : '';
     const [mapKey, setMapKey] = useState(0); // Add state to trigger map refresh
     const refreshMap = useCallback(() => {
         setMapKey(prevKey => prevKey + 1); // Increment key to force re-render
@@ -35,7 +37,7 @@ const Root = () => {
             <APIProvider apiKey={API_KEY}>
                 <div style={{ height: "100vh" }}>
                     <main role="main" className="pb-3">
-                    <CustomMap key={mapKey} refreshMap={refreshMap} />
+                    <CustomMap key={mapKey} refreshMap={refreshMap} jwt={jwt} />
                     </main>
                 </div>
             </APIProvider>

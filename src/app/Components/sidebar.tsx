@@ -13,12 +13,14 @@ import LoginForm from "@/app/routes/Identity/loginForm";
 import RegisterForm from "@/app/routes/Identity/registerForm";
 import VehicleList from '../Forms/VehicleList';
 
+
 const Sidebar: React.FC = () => {
     const [show, setShow] = useState(false);
     const [licensePlate, setLicensePlate] = useState('');
     const [submittedPlate, setSubmittedPlate] = useState('');
     const { jwtResponse, setJwtResponse } = useContext(JwtContext);
     const navigate = useNavigate();
+
 
     const [loginValues, setLoginValues] = useState<ILoginData>({
         email: "",
@@ -119,6 +121,8 @@ const Sidebar: React.FC = () => {
             setValidationErrors(["An error occurred during registration. Please try again later."]);
         }
     };
+
+    console.log(useContext(JwtContext).jwtResponse);
 
     return (
         <>

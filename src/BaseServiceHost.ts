@@ -1,8 +1,9 @@
 import Axios, { AxiosInstance } from 'axios';
+import Sidebar from "@/app/Components/sidebar";
 
 export abstract class BaseServiceHost {
 
-  private static hostBaseURL = "http://localhost:5240/api/v1/";
+  private static hostBaseURL = "https://alsunjtrafficreport.azurewebsites.net/api/v1/";
 
   protected axios: AxiosInstance;
 
@@ -11,7 +12,7 @@ export abstract class BaseServiceHost {
           {
               baseURL: BaseServiceHost.hostBaseURL + baseUrl,
               headers: {
-                'Content-Type': 'application/json'
+                'Content-Type': 'application/json',
               }
           }
       )
