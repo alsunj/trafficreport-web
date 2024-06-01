@@ -62,7 +62,7 @@ const VehicleForm: React.FC<VehicleFormProps> = ({ onSubmit, onCancel}) => {
     return true;
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
     if (validateForm()) {
@@ -77,12 +77,22 @@ const VehicleForm: React.FC<VehicleFormProps> = ({ onSubmit, onCancel}) => {
     };
     console.log(vehicle);
     try {
-      vehicleService.add(vehicle);
-      onSubmit();
-
-    } catch (error) {
+      const result = await vehicleService.add(vehicle);
+      if (result.errors && result.errors.length > 0) {
+          console.error("Error submitting vehicle:", result.errors);
+          // Handle the specific error message
+          if (result.errors.includes('Vehicle with that license plate is already in the system.')) {
+              alert('Vehicle with that license plate is already in the system.');
+          } else {
+              alert('An error occurred while submitting the vehicle.');
+          }
+      } else {
+          onSubmit();
+      }
+  } catch (error) {
       console.error("Error submitting vehicle:", error);
-    }
+      alert('An unexpected error occurred.');
+  }
     }
   };
 

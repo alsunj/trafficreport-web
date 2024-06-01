@@ -28,12 +28,18 @@ export class BaseService<TEntity> extends BaseServiceHost {
 
     async add(entity: TEntity): Promise<IResultObject<TEntity>> {
         try {
-            let response = await this.axios.post('', entity, {
-            });
+            let response = await this.axios.post('', entity);
             return {
                 data: response.data
             };
         } catch (error: any) {
+            // Check if the error is an Axios error and has a response
+            if (error.response && error.response.status === 409) {
+                return {
+                    errors: ['Vehicle with that license plate is already in the system.']
+                };
+            }
+    
             return {
                 errors: [JSON.stringify(error)]
             };
