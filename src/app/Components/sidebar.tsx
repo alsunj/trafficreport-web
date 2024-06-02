@@ -1,60 +1,36 @@
-import React, { useContext, useState } from 'react';
-import Button from 'react-bootstrap/Button';
-import Offcanvas from 'react-bootstrap/Offcanvas';
+import React, {useContext, useEffect, useState} from 'react';
+import { Button, Offcanvas } from 'react-bootstrap';
+import { Link, useNavigate } from 'react-router-dom';
 import VehicleViolationsByLicense from '@/app/Forms/vehicleViolationsByLicense';
-import '../../../styles.css';
 import FieldSubmit from "@/app/Components/fieldSubmit";
-import { Link, useNavigate } from "react-router-dom";
-import { ILoginData } from "@/app/dto/ILoginData";
-import { IRegisterData } from "@/app/dto/IRegisterData";
-import { IdentityService } from "@/app/services/IdentityService";
+
+import VehicleList from '../Forms/VehicleList';
+
+import '../../../styles.css';
+import {JwtContext} from "@/app/routes/JwtContext";
+import {IdentityService} from "@/app/services/IdentityService";
 import LoginForm from "@/app/routes/Identity/loginForm";
 import RegisterForm from "@/app/routes/Identity/registerForm";
-import VehicleList from '../Forms/VehicleList';
-import {JwtContext} from "@/app/routes/JwtContext";
-
 
 const Sidebar: React.FC = () => {
     const [show, setShow] = useState(false);
     const [licensePlate, setLicensePlate] = useState('');
     const [submittedPlate, setSubmittedPlate] = useState('');
-    const { jwtResponse, setJwtResponse } = useContext(JwtContext);
+    const jwtContext = useContext(JwtContext);
     const navigate = useNavigate();
 
-
-    const [loginValues, setLoginValues] = useState<ILoginData>({
-        email: "",
-        password: "",
-    });
-
-    const [registerValues, setRegisterValues] = useState<IRegisterData>({
-        email: "",
-        password: "",
-    });
-
+    const [loginValues, setLoginValues] = useState({ email: "", password: "" });
+    const [registerValues, setRegisterValues] = useState({ email: "", password: "" });
     const [validationErrors, setValidationErrors] = useState<string[]>([]);
+    const [showRegistrationForm, setShowRegistrationForm] = useState(false);
+    const [showLoginForm, setShowLoginForm] = useState(false);
 
     const identityService = new IdentityService('/api/v1/identity/Account/');
 
-    const [showRegistrationForm, setShowRegistrationForm] = useState(false);
-    const [showLoginForm, setShowLoginForm] = useState(false);
     const handleClose = () => setShow(false);
     const handleShow = () => setShow(true);
-
-    const handleCloseRegistration = () => {
-        setShowRegistrationForm(false);
-    };
-    const handleShowRegistration = () => {
-        setShowRegistrationForm(!showRegistrationForm);
-    };
-
-    const handleCloseLogin = () => {
-        setShowLoginForm(false);
-    };
-    const handleShowLogin = () => {
-        setShowLoginForm(!showLoginForm);
-    };
-
+    const handleToggleRegistration = () => setShowRegistrationForm(!showRegistrationForm);
+    const handleToggleLogin = () => setShowLoginForm(!showLoginForm);
 
     const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
@@ -87,11 +63,11 @@ const Sidebar: React.FC = () => {
                 return;
             }
 
-            if (setJwtResponse) {
-                setJwtResponse(jwtData);
+            if (jwtContext?.setJwtResponse) {
+                jwtContext.setJwtResponse(jwtData);
             }
-            navigate("/");
             handleClose();
+            window.location.reload();
         } catch (error) {
             setValidationErrors(["An error occurred during login. Please try again later."]);
         }
@@ -103,7 +79,6 @@ const Sidebar: React.FC = () => {
         if (!registerValues.email || !registerValues.password) {
             setValidationErrors(["Please fill in all fields."]);
             return;
-
         }
 
         setValidationErrors([]);
@@ -115,8 +90,6 @@ const Sidebar: React.FC = () => {
                 setValidationErrors(["Registration failed. Please try again."]);
                 return;
             }
-
-            navigate("/login");
             handleClose();
         } catch (error) {
             setValidationErrors(["An error occurred during registration. Please try again later."]);
@@ -135,46 +108,45 @@ const Sidebar: React.FC = () => {
                 </Offcanvas.Header>
 
                 <Offcanvas.Body>
-                    <Button variant="primary" onClick={handleShowLogin}>
-                        Login
-                    </Button>
-                    {showLoginForm && (
-                        <div style={{ display: jwtResponse == null ? '' : 'none' }}>
-                            <LoginForm
-                                values={loginValues}
-                                handleChange={handleLoginChange}
-                                onSubmit={handleLoginSubmit}
-                                validationErrors={validationErrors}
-                            />
-                        </div>
+                    {!jwtContext?.jwtResponse && (
+                        <>
+                            <Button variant="primary" onClick={handleToggleLogin}>
+                                Login
+                            </Button>
+                            {showLoginForm && (
+                                <LoginForm
+                                    values={loginValues}
+                                    handleChange={handleLoginChange}
+                                    onSubmit={handleLoginSubmit}
+                                    validationErrors={validationErrors}
+                                />
+                            )}
+                            <Button variant="primary" onClick={handleToggleRegistration}>
+                                Register
+                            </Button>
+                            {showRegistrationForm && (
+                                <RegisterForm
+                                    values={registerValues}
+                                    handleChange={handleRegisterChange}
+                                    onSubmit={handleRegisterSubmit}
+                                    validationErrors={validationErrors}
+                                />
+                            )}
+                        </>
                     )}
-                    <Button variant="primary" onClick={handleShowRegistration}>
-                        Register
-                    </Button>
-                    {showRegistrationForm && (
-                        <div style={{ display: jwtResponse == null ? '' : 'none' }}>
-                            <RegisterForm
-                                values={registerValues}
-                                handleChange={handleRegisterChange}
-                                onSubmit={handleRegisterSubmit}
-                                validationErrors={validationErrors}
-                            />
-                        </div>
+                    {jwtContext?.jwtResponse && (
+                        <Link to="/" onClick={() => jwtContext!.setJwtResponse && jwtContext!.setJwtResponse(null)}>Log out</Link>
                     )}
-                    <div style={{ display: jwtResponse == null ? 'none' : '' }}>
-                        <Link to="logout" onClick={() => setJwtResponse!}>Log out</Link>
-                    </div>
                     <FieldSubmit
                         licensePlate={licensePlate}
                         setLicensePlate={setLicensePlate}
                         onSubmit={handleSubmit}
                     />
                     {submittedPlate && (
-                        <VehicleList licensePlate={submittedPlate} />
-                    )}
-                    
-                    {submittedPlate && (
-                        <VehicleViolationsByLicense licensePlate={submittedPlate} />
+                        <>
+                            <VehicleList licensePlate={submittedPlate} />
+                            <VehicleViolationsByLicense licensePlate={submittedPlate} />
+                        </>
                     )}
                 </Offcanvas.Body>
             </Offcanvas>

@@ -31,7 +31,7 @@ const VehicleViolationsByLicense: React.FC<VehicleViolationsByLicenseProps> = ({
 
     if (licenseVehicleViolations && licenseVehicleViolations.length === 0) {
         
-            return <div>No Vehicle Violations for {licensePlate}</div>;
+            return <div>No Vehicle Violations for license plate {licensePlate.toUpperCase()}</div>;
         }
 
     return (

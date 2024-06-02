@@ -40,7 +40,7 @@ const VehicleList: React.FC<VehicleListProps> = ({licensePlate}) => {
     }, [licensePlate]);
   
     if (vehicle === null) {
-      return <div>No Vehcile found with this regnr {licensePlate}</div>;
+      return <div>No Vehicle found with license plate {licensePlate.toUpperCase()}</div>;
     }
   
     return (

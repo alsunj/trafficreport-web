@@ -1,10 +1,11 @@
 import { MouseEvent, useContext, useState } from "react";
 import { IdentityService } from "../../services/IdentityService";
-import { JwtContext } from "../Root";
+
 import { useNavigate } from "react-router-dom";
 import { ILoginData } from "@/app/dto/ILoginData";
 
 import LoginForm from "@/app/routes/Identity/loginForm";
+import {JwtContext} from "@/app/routes/JwtContext";
 
 const Login = () => {
     const navigate = useNavigate();
@@ -20,7 +21,7 @@ const Login = () => {
         setInput({ ...values, [event.target.name]: event.target.value });
     }
 
-    const { setJwtResponse } = useContext(JwtContext);
+    const jwtContext = useContext(JwtContext);
 
     const identityService = new IdentityService('https://alsunjtrafficreport.azurewebsites.net/api/v1/identity/Account/Login');
 
@@ -42,9 +43,10 @@ const Login = () => {
                 return;
             }
 
-            if (setJwtResponse) {
-                setJwtResponse(jwtData);
+            if (jwtContext?.setJwtResponse) {
+                jwtContext.setJwtResponse(jwtData);
             }
+
             navigate("/");
         } catch (error) {
             setValidationErrors(["An error occurred during login. Please try again later."]);

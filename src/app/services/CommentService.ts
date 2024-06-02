@@ -10,13 +10,12 @@ export class CommentService extends BaseService<IComment> {
         try {
             const response = await this.axios.get<IComment[]>(`/${id}`);
             if (response.status === 200) {
-                customMap.propTypes?.jwt;
                 return response.data;
             }
-            return []; // Return an empty array if response status is not 200
+            return [];
         } catch (e) {
             console.log('error: ', (e as Error).message);
-            return []; // Return an empty array if an error occurs
+            return [];
         }
     }
     

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, {useState, useEffect, useContext} from "react";
 import { Map, Marker, AdvancedMarker, MapMouseEvent } from "@vis.gl/react-google-maps";
 import VehicleViolationForm from "../Forms/vehicleViolation";
 import { VehicleViolationService } from "../services/VehicleViolationService";
@@ -10,6 +10,7 @@ import Sidebar from "@/app/Components/sidebar";
 import EvidenceForm from "../Forms/EvidenceForm";
 import AdditionalVehicleForm from "../Forms/AdditionalVehicleForm";
 import ViolationForm from "../Forms/violationForm";
+import {JwtContext, JwtProvider} from "@/app/routes/JwtContext";
 
 
 export interface IExistingVehicleViolations {
@@ -41,6 +42,8 @@ const CustomMap: React.FC<customMapProps> = ({ refreshMap }) => {
   const [showAdditionalVehicleForm, setShowAdditionalVehicleForm] = useState(false);
   const [parentCommentId, setParentCommentId] = useState<string | null>(null);
 
+
+  const jwtContext = useContext(JwtContext);
   const toggleVehicleForm = () => {
     setShowVehicleForm(prev => !prev);
     setVehicleViolationCreateForm(prev => !prev);
@@ -118,11 +121,10 @@ const CustomMap: React.FC<customMapProps> = ({ refreshMap }) => {
   const crashicon = "https://cdn-icons-png.flaticon.com/512/1576/1576488.png"
 
   useEffect(() => {
-    console.log('3');
     const fetchData = async () => {
       try {
 
-        const fetchedVehicleViolations = await vehicleViolationService.getAll();
+        const fetchedVehicleViolations = await vehicleViolationService.getAll(jwtContext?.jwtResponse?.token);
         const transformedVehicleViolations: IExistingVehicleViolations[] = fetchedVehicleViolations.map(vehicleViolation => {
           const [lat, lng] = vehicleViolation.coordinates.split(';').map(Number);
           return {

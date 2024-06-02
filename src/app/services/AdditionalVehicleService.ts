@@ -11,10 +11,10 @@ export class AdditionalVehicleService extends BaseService<IAdditionalVehicle> {
             if (response.status === 200) {
                 return response.data;
             }
-            return []; // Return an empty array if response status is not 200
+            return [];
         } catch (e) {
             console.log('error: ', (e as Error).message);
-            return []; // Return an empty array if an error occurs
+            return [];
         }
 }
 }

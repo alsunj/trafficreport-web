@@ -1,9 +1,10 @@
 import React, { useContext, useState } from "react";
 import { MouseEvent } from "react";
-import RegisterForm from "./registerForm";
 import { IRegisterData } from "../../dto/IRegisterData";
 import { IdentityService } from "../../services/IdentityService";
-import { JwtContext } from "../Root";
+import {JwtContext} from "@/app/routes/JwtContext";
+import RegisterForm from "@/app/routes/Identity/registerForm";
+
 
 const Register = () => {
     const [values, setInput] = useState({
@@ -19,7 +20,7 @@ const Register = () => {
         setInput({ ...values, [target.name]: target.value });
     }
 
-    const {jwtResponse, setJwtResponse} = useContext(JwtContext);
+    const jwtContext = useContext(JwtContext);
 
     const identityService = new IdentityService('');
 
@@ -43,17 +44,12 @@ const Register = () => {
         console.log(jwtData);
 
 
-        if (setJwtResponse) setJwtResponse(jwtData);
+        if (jwtContext?.setJwtResponse) {
+            jwtContext.setJwtResponse(jwtData);
+        }
+
     }
 
-    // return (
-    //
-    //     <RegisterForm
-    //         values={values}
-    //         handleChange={handleChange}
-    //         onSubmit={onSubmit}
-    //         validationErrors={validationErrors}/>
-    // );
 }
 
 export default Register;
