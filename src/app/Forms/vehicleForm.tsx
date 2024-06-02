@@ -76,11 +76,12 @@ const VehicleForm: React.FC<VehicleFormProps> = ({ onSubmit, onCancel}) => {
       regNr: vehicleRegNr
     };
     console.log(vehicle);
+    
     try {
       const result = await vehicleService.add(vehicle);
       if (result.errors && result.errors.length > 0) {
           console.error("Error submitting vehicle:", result.errors);
-          if (result.errors.includes('Vehicle with that license plate is already in the system.')) {
+          if (result.errors.includes('409')) {
               alert('Vehicle with that license plate is already in the system.');
           } else {
               alert('An error occurred while submitting the vehicle.');
@@ -92,9 +93,8 @@ const VehicleForm: React.FC<VehicleFormProps> = ({ onSubmit, onCancel}) => {
       console.error("Error submitting vehicle:", error);
       alert('An unexpected error occurred.');
   }
-    }
-  };
-
+}
+};
   
   return (
     <Form onSubmit={handleSubmit} className="position-absolute top-50 start-50 translate-middle p-4 bg-white rounded shadow" style={{ width: '400px' }} >

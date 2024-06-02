@@ -35,7 +35,7 @@ export class BaseService<TEntity> extends BaseServiceHost {
         } catch (error: any) {
             if (error.response && error.response.status === 409) {
                 return {
-                    errors: ['Vehicle with that license plate is already in the system.']
+                    errors: ['409']
                 };
             }
     
