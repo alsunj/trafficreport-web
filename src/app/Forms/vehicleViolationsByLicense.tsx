@@ -7,9 +7,10 @@ import '../../../styles.css';
 
 interface VehicleViolationsByLicenseProps {
     licensePlate: string;
+    onChoose: (id: string) => void;
 }
 
-const VehicleViolationsByLicense: React.FC<VehicleViolationsByLicenseProps> = ({ licensePlate }) => {
+const VehicleViolationsByLicense: React.FC<VehicleViolationsByLicenseProps> = ({ licensePlate, onChoose }) => {
     let endpoint = `VehicleViolation/GetVehicleViolationsByLicensePlate`;
     let vehicleViolationService = new VehicleViolationService(endpoint);
     let [licenseVehicleViolations, setLicenseVehicleViolations] = useState<IVehicleViolation[] | null>(null);
@@ -28,6 +29,9 @@ const VehicleViolationsByLicense: React.FC<VehicleViolationsByLicenseProps> = ({
 
         fetchData();
     }, [licensePlate]);
+    const handleRowClick = (id: string) => {
+        onChoose(id);
+    };
 
     if (licenseVehicleViolations && licenseVehicleViolations.length === 0) {
         
@@ -51,12 +55,21 @@ const VehicleViolationsByLicense: React.FC<VehicleViolationsByLicenseProps> = ({
                 </thead>
                 <tbody>
                 {licenseVehicleViolations.map((vehicleViolation: IVehicleViolation) => (
-                        <tr key={vehicleViolation.id}>
+                        <tr key={vehicleViolation.id} onClick={() => {
+                            if (vehicleViolation.id) {
+                                handleRowClick(vehicleViolation.id);
+                            }
+                        }}>
                             <td>{vehicleViolation.description}</td>
                             <td>{vehicleViolation.locationName}</td>
                             <td>{vehicleViolation.createdAt}</td>
                             <td>
-
+                                <span className="highlight-label" onClick={(e) => {
+                                    e.stopPropagation();
+                                    if (vehicleViolation.id) {
+                                        handleRowClick(vehicleViolation.id);
+                                    }
+                                }}>Select</span>
                             </td>
                         </tr>
                     ))}

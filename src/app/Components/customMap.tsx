@@ -105,8 +105,13 @@ const CustomMap: React.FC<customMapProps> = ({ refreshMap }) => {
   const closeVehicleVCreateForm = () => {
     setVehicleViolationCreateForm(false);
   }
+  const handleChooseId = (midagi: string) => {
+    console.log("tehtud id on"+ midagi)
+    handleExistingMarkerClick(midagi)
+  };
+
   const handleMarkerClick = () => {
-    if (markerLocation) { // Check if markerLocation is defined
+    if (markerLocation) {
       const confirmation = window.confirm("Would you like to create a vehicle violation on set marker?");
       if (confirmation) {
         const latlng = markerLocation.lat.toString() + ";" + markerLocation.lng.toString();
@@ -147,7 +152,7 @@ const CustomMap: React.FC<customMapProps> = ({ refreshMap }) => {
     <div style={{ height: "98vh", position: "relative" }}>
       <Map defaultZoom={14} defaultCenter={{ lat: 59.39552664613792, lng: 24.671705895803086 }} disableDefaultUI disableDoubleClickZoom onDblclick={handleMapDblClick} mapId={"5588886"}>
         <div style={{ position: "absolute", top: "20px", left: "20px", zIndex: 999 }}>
-          <Sidebar />
+        <Sidebar onChoose={handleChooseId} />;
         </div>
         {existingVehicleViolations?.map(violation => (
           <AdvancedMarker

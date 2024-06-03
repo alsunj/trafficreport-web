@@ -12,7 +12,11 @@ import {IdentityService} from "@/app/services/IdentityService";
 import LoginForm from "@/app/routes/Identity/loginForm";
 import RegisterForm from "@/app/routes/Identity/registerForm";
 
-const Sidebar: React.FC = () => {
+interface SidebarProps {
+    onChoose: (id: string) => void;
+}
+
+const Sidebar: React.FC<SidebarProps> = ({onChoose}) => {
     const [show, setShow] = useState(false);
     const [licensePlate, setLicensePlate] = useState('');
     const [submittedPlate, setSubmittedPlate] = useState('');
@@ -95,6 +99,12 @@ const Sidebar: React.FC = () => {
             setValidationErrors(["An error occurred during registration. Please try again later."]);
         }
     };
+    const handleViolationChoose = (id: string) => {
+
+        console.log("Selected violation ID:", id);
+        onChoose(id);
+        handleClose();
+    };
 
     return (
         <>
@@ -145,8 +155,7 @@ const Sidebar: React.FC = () => {
                     {submittedPlate && (
                         <>
                             <VehicleList licensePlate={submittedPlate} />
-                            <VehicleViolationsByLicense licensePlate={submittedPlate} />
-                        </>
+                            <VehicleViolationsByLicense licensePlate={submittedPlate} onChoose={handleViolationChoose} />                        </>
                     )}
                 </Offcanvas.Body>
             </Offcanvas>
