@@ -17,7 +17,7 @@ const Sidebar: React.FC = () => {
     const [licensePlate, setLicensePlate] = useState('');
     const [submittedPlate, setSubmittedPlate] = useState('');
     const jwtContext = useContext(JwtContext);
-    const navigate = useNavigate();
+
 
     const [loginValues, setLoginValues] = useState({ email: "", password: "" });
     const [registerValues, setRegisterValues] = useState({ email: "", password: "" });
@@ -66,8 +66,8 @@ const Sidebar: React.FC = () => {
             if (jwtContext?.setJwtResponse) {
                 jwtContext.setJwtResponse(jwtData);
             }
+            window.location.reload()
             handleClose();
-            window.location.reload();
         } catch (error) {
             setValidationErrors(["An error occurred during login. Please try again later."]);
         }
@@ -135,7 +135,7 @@ const Sidebar: React.FC = () => {
                         </>
                     )}
                     {jwtContext?.jwtResponse && (
-                        <Link to="/" onClick={() => jwtContext!.setJwtResponse && jwtContext!.setJwtResponse(null)}>Log out</Link>
+                        <Button onClick={() => jwtContext!.setJwtResponse && jwtContext!.setJwtResponse(null)}>Log out</Button>
                     )}
                     <FieldSubmit
                         licensePlate={licensePlate}

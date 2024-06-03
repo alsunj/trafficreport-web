@@ -1,7 +1,6 @@
 import React, { createContext, ReactNode, useState, useEffect } from 'react';
 import { IJwtResponse } from "@/app/dto/IJwtResponse";
 import { setJwtToken } from "@/app/routes/Identity/apiClient";
-
 interface JwtContextProps {
     jwtResponse: IJwtResponse | null;
     setJwtResponse: (data: IJwtResponse | null) => void;
@@ -9,12 +8,13 @@ interface JwtContextProps {
 
 export const JwtContext = createContext<JwtContextProps | null>(null);
 
-
-// Need to save in local storage to survive page refresh
 export const JwtProvider = ({ children }: { children: ReactNode }) => {
     const [jwtResponse, setJwtResponseState] = useState<IJwtResponse | null>(() => {
-        const storedJwt = localStorage.getItem('jwtResponse');
-        return storedJwt ? JSON.parse(storedJwt) : null;
+        if (typeof window !== 'undefined') {
+            const storedJwt = localStorage.getItem('jwtResponse');
+            return storedJwt ? JSON.parse(storedJwt) : null;
+        }
+        return null;
     });
 
     useEffect(() => {

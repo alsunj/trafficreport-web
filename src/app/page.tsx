@@ -1,15 +1,27 @@
 "use client";
-import { BrowserRouter } from 'react-router-dom'
 import React from 'react';
-import Root from './routes/Root';
-export default function Home() 
-{
+import { APIProvider } from "@vis.gl/react-google-maps";
+import { useState,useCallback } from 'react';
+import { JwtProvider } from './routes/JwtContext';
+import CustomMap from './Components/customMap';
+const Home = () => {
+  const [mapKey, setMapKey] = useState(0);
+  const refreshMap = useCallback(() => {
+      setMapKey(prevKey => prevKey + 1);
+  }, []);
+
+  const API_KEY = 'AIzaSyALWYKCItcOvaUOvqRGcMw4WhmeITlw8r4'; 
   return (
-    <BrowserRouter>
-      <div style ={{height:"20vh"}}>
-        <Root/>
-      </div>
-    </BrowserRouter>
-  
+      <JwtProvider>
+          <APIProvider apiKey={API_KEY}>
+              <div style={{ height: "100vh" }}>
+                  <main role="main" className="pb-3">
+                      <CustomMap key={mapKey} refreshMap={refreshMap} />
+                  </main>
+              </div>
+          </APIProvider>
+      </JwtProvider>
   );
-}
+};
+export default Home;
+
