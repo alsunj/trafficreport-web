@@ -113,7 +113,7 @@ const VehicleViolationForm: React.FC<VehicleViolationFormProps> = ({
           value={vehicleLicensePlate}
           onChange={(e) => setVehicleLicensePlate(e.target.value)}
         >
-          <option value="">Select Violation</option>
+          <option value="">Select Vehicle Reg NR</option>
           {vehicles.map((vehicle) => (
             <option key={vehicle.id} value={vehicle.id}>{vehicle.regNr}</option>
           ))}

@@ -10,7 +10,7 @@ import Sidebar from "@/app/Components/sidebar";
 import EvidenceForm from "../Forms/EvidenceForm";
 import AdditionalVehicleForm from "../Forms/AdditionalVehicleForm";
 import ViolationForm from "../Forms/violationForm";
-import {JwtContext, JwtProvider} from "@/app/routes/JwtContext";
+import {JwtContext} from "@/app/routes/JwtContext";
 
 
 export interface IExistingVehicleViolations {

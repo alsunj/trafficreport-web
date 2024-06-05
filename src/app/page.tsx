@@ -10,7 +10,7 @@ const Home = () => {
       setMapKey(prevKey => prevKey + 1);
   }, []);
 
-  const API_KEY = 'AIzaSyALWYKCItcOvaUOvqRGcMw4WhmeITlw8r4'; 
+  const API_KEY = process.env.REACT_APP_MAPS_KEY || 'AIzaSyALWYKCItcOvaUOvqRGcMw4WhmeITlw8r4';
   return (
       <JwtProvider>
           <APIProvider apiKey={API_KEY}>

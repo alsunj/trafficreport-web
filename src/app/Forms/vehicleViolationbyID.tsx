@@ -52,7 +52,7 @@ const VehicleViolationsById: React.FC<VehicleViolationsByIdProps> = ({ vehicleVi
     const [comments, setComments] = useState<IComment[] | null>(null);
     const [evidences, setEvidences] = useState<IEvidence[] | null>(null);
     const [additionalVehicleIds, setAdditionalVehicleIds] = useState<IAdditionalVehicle[] | null>(null);
-    
+
 
     const [fetchCount, setFetchCount] = useState(0);
 
@@ -106,7 +106,7 @@ const VehicleViolationsById: React.FC<VehicleViolationsByIdProps> = ({ vehicleVi
             fetchData();
         }
     }, [fetchCount]);
-    if (idVehicleViolation && vehicleTypes == null){
+    if (idVehicleViolation && vehicleTypes == null) {
         return <div><Spinner animation="border" /></div>;
 
     }
@@ -126,7 +126,7 @@ const VehicleViolationsById: React.FC<VehicleViolationsByIdProps> = ({ vehicleVi
                         />
 
                         <Carousel.Caption className="top-center">
-                        <h4 className="top-right" onClick={toggleEvidenceForm}>Create Evidence</h4>
+                            <h4 className="top-right" onClick={toggleEvidenceForm}>Create Evidence</h4>
 
                             <h1 className="black-text">Vehicle Violation</h1>
                             <hr className="black-text" />
@@ -149,7 +149,7 @@ const VehicleViolationsById: React.FC<VehicleViolationsByIdProps> = ({ vehicleVi
                                 </tbody>
                             </Table>
                             <h1 className="black-text">Vehicle</h1>
-                            <hr className="black-text"/>
+                            <hr className="black-text" />
 
                             <Table striped bordered hover>
                                 <thead>
@@ -172,9 +172,9 @@ const VehicleViolationsById: React.FC<VehicleViolationsByIdProps> = ({ vehicleVi
                                 </tbody>
                             </Table>
                             <h1 className="black-text">Additional Vehicles</h1>
-                            
+
                             <h4 className="black-text" onClick={toggleAdditionalVehicleForm}>Create AdditionalVehicle</h4>
-                            <hr className="black-text"/>
+                            <hr className="black-text" />
 
                             <Table striped bordered hover>
                                 <thead>
@@ -208,7 +208,7 @@ const VehicleViolationsById: React.FC<VehicleViolationsByIdProps> = ({ vehicleVi
 
                         <Carousel.Caption className="top-center">
                             <h1 className="black-text">Comments</h1>
-                            <hr className="black-text"/>
+                            <hr className="black-text" />
 
                             <h4 className="top-right" onClick={() => toggleCommentForm(undefined)}>Create Comment</h4>
 
@@ -221,13 +221,14 @@ const VehicleViolationsById: React.FC<VehicleViolationsByIdProps> = ({ vehicleVi
                                     </thead>
                                     <tbody>
                                         <tr>
-                                            <td>{comment.commentText}</td>
+                                            <td>{comment.commentText}
+                                                <h4 className="black-text" onClick={() => toggleCommentForm(comment.id)}>Create Comment</h4>
+                                            </td>
                                         </tr>
-                                        <h4 className="black-text" onClick={() => toggleCommentForm(comment.id)}>Create Comment</h4>
 
                                         <tr key={`${comment.id}-subcomments`}>
                                             <td colSpan={1}>
-                                            <VehicleViolationComments id={comment.id ?? ''} />
+                                                <VehicleViolationComments id={comment.id ?? ''} />
                                             </td>
                                         </tr>
                                     </tbody>
@@ -242,7 +243,7 @@ const VehicleViolationsById: React.FC<VehicleViolationsByIdProps> = ({ vehicleVi
                                 <a href={evidence.file} className="top-right">Link to Image</a>
 
                                 <h1 className="black-text">Evidence</h1>
-                                <hr className="black-text"/>
+                                <hr className="black-text" />
                                 <h5 className="black-text">{evidence.description}</h5>
                                 <br />
                                 <img src={`${evidence.file}`} alt={`Evidence file ${evidence.file}`} className="additional-evidence-image" />

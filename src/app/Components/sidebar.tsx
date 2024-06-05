@@ -160,7 +160,7 @@ const Sidebar: React.FC<SidebarProps> = ({onChoose}) => {
                 </Offcanvas.Body>
             </Offcanvas>
         </>
-    );
+    )
 };
 
 export default Sidebar;
