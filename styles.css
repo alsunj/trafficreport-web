@@ -1,0 +1,63 @@
+.small-font {
+    font-size: 12px;
+}
+
+.medium-font {
+    font-size: 14px;
+}
+
+.large-font {
+    font-size: 20px;
+}
+
+.custom-offcanvas {
+    width: 20% !important;
+}
+.top-center {
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 80%;
+    text-align: center;
+  }
+
+  .top-leftbutton {
+    position: absolute;
+    top: 1;
+    left: 95%;
+    transform: translateX(-50%);
+    width: 100%;
+    text-align: center;
+    z-index: 1000;
+  }
+  .top-right-littleleft {
+    position: absolute;
+    top: 1;
+    left: 82%;
+    transform: translateX(-50%);
+    width: 100%;
+    text-align: center;
+
+  }
+  .top-right{
+    position: absolute;
+    top: 1;
+    left: 90%;
+    transform: translateX(-50%);
+    width: 100%;
+    text-align: center;
+    z-index: 999;
+    color: black;
+
+  }
+  .black-text {
+    color: black;
+  }
+  .centered-div {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 999;
+  }
