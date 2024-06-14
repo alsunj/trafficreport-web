@@ -1,6 +1,6 @@
 # trafficreport-web
 
-~~bash
+~~~bash
 alsunj
 Alex Šunjajev
 alsunj@taltech.ee
@@ -10,10 +10,10 @@ Ott-Eerik Õun
 213280IADB
 ottoun@taltech.ee
 ottoun
-~~
+~~~
 
-~~bash
+~~~bash
 npm run dev
-~~
+~~~
 
 Documentation at trafficreport repository.
