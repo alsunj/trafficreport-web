@@ -17,4 +17,4 @@ npm run dev
 ~~~
 
 Documentation at trafficreport repository.
-https://github.com/alsunj/trafficreport
+[https://github.com/alsunj/trafficreport](https://github.com/alsunj/trafficreport/blob/main/Documentation/Traffic_Report_documentation.pdf)
